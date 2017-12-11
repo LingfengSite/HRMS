@@ -3,3 +3,12 @@ TP5 Upload
 <<<<<<< HEAD
 2017 12-06 10:06
 Theme upload
+=======
+
+2017 12-6 15:40
+数据库初始化模板
+>>>>>>> 4e202bfa7c07f7c5b4264a1127bb8d1b5563133d
+
+2017 12-7 11:00
+1.member 表增加 bind_staff_id 字段
+2.增加service服务量表
