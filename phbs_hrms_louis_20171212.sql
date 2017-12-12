@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-11 09:49:36
+Date: 2017-12-12 16:14:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,14 +30,14 @@ CREATE TABLE `hrms_member` (
   `roleid` smallint(5) DEFAULT '0',
   `realname` varchar(50) NOT NULL DEFAULT '',
   `lang` varchar(6) NOT NULL,
-  `bind_staff_id` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`userid`),
   KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of hrms_member
 -- ----------------------------
+INSERT INTO `hrms_member` VALUES ('1', '刘圣麟', '123456', null, null, '0', null, '2', '', '');
 
 -- ----------------------------
 -- Table structure for hrms_service
@@ -50,9 +50,9 @@ CREATE TABLE `hrms_service` (
   `program` int(6) NOT NULL,
   `project` int(6) NOT NULL,
   `score` int(6) NOT NULL,
-  `creat_user_id` int(6) NOT NULL,
   `update_time` int(11) NOT NULL,
   `update_user_id` int(6) NOT NULL,
+  `state` tinyint(1) unsigned zerofill DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`update_user_id`,`program`,`project`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -60,11 +60,11 @@ CREATE TABLE `hrms_service` (
 -- ----------------------------
 -- Records of hrms_service
 -- ----------------------------
-INSERT INTO `hrms_service` VALUES ('1', '1', '2017-2018', '2', '2', '1', '0', '0', '10');
-INSERT INTO `hrms_service` VALUES ('2', '1', '2017-2018', '3', '3', '2', '0', '0', '10');
-INSERT INTO `hrms_service` VALUES ('4', '1', '2017-2018', '3', '3', '2', '0', '0', '10');
-INSERT INTO `hrms_service` VALUES ('3', '2', '2017-2018', '1', '6', '3', '2', '1323165', '2');
-INSERT INTO `hrms_service` VALUES ('5', '2', '2017-2018', '0', '0', '3', '2', '1323165', '2');
+INSERT INTO `hrms_service` VALUES ('1', '1', '2017-2018', '2', '2', '156', '1513066237', '1', '0');
+INSERT INTO `hrms_service` VALUES ('2', '1', '2017-2018', '3', '3', '2', '1513048562', '1', '0');
+INSERT INTO `hrms_service` VALUES ('4', '1', '2017-2018', '3', '3', '2', '1513048562', '1', '0');
+INSERT INTO `hrms_service` VALUES ('3', '2', '2017-2018', '1', '6', '3', '1513048562', '1', '0');
+INSERT INTO `hrms_service` VALUES ('6', '1', '2017-2018', '3', '2', '3', '1513049709', '1', '0');
 
 -- ----------------------------
 -- Table structure for hrms_workload

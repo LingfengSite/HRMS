@@ -8,5 +8,51 @@
 // +----------------------------------------------------------------------
 // | Author: 流年 <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-
 // 应用公共文件
+use think\Db;
+use \think\Session;
+//add by louis 2017.12.12
+//获取用户ID
+function get_user_id(){
+	if($user_id = Session::get('user_id')){
+		return $user_id;
+	}else{
+		die(json_return_with_msg(0,'Plz login in'));
+	}
+}
+//获取用户角色ID
+function get_role_id(){
+	if($role_id = Session::get('role_id')){
+		return $role_id;
+	}else{
+		$user_id = get_user_id();
+		$role_id = Db::table('hrms_member')->where('userid',$user_id)->value('roleid');
+		if(empty($role_id) || !is_int($role_id)){
+			return json_return_with_msg(0,'get role error');
+		}
+		Session::set('role_id',$role_id);
+		return $role_id;
+	}
+}
+//检查用户角色level是否大于等于某数
+function check_role_level($level){
+	if(empty($level)){
+		$level = 9;
+	}
+	$role_id = get_role_id();
+	if($role_id < $level){
+		die(json_return_with_msg(0,'role level not enough'));
+	}
+}
+//JSON返回$code状态码,$msg状态信息
+function json_return_with_msg($code,$msg){
+	if(!ISSET($code)){
+		$code = 0;
+		$msg = 'not set code';
+	}
+	if(empty($msg)){
+		$msg = "not set msg";
+	}
+	$json_respon = array('code' => $code, 'msg' => $msg);
+	return json_encode($json_respon);
+}

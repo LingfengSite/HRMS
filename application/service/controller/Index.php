@@ -19,35 +19,87 @@ class index extends \think\Controller
 		$sum = array();
 		$list = Service::select();
 		foreach($list as $row){
-			$row = $row -> getData();
+			$row = $row -> getData();	
+			if($row['project'] == 0 || $row['program'] == 0){
+				continue;
+			}
+			//个人分数统计
 			if(empty($sum[$row['user_id']])){
-				$sum[$row['user_id']]['name'] = $row['user_id'];
+				$sum[$row['user_id']]['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			}
 			if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
 				$sum[$row['user_id']][$row['program']][$row['project']] = $row['score'];
 			}else{
 				$sum[$row['user_id']][$row['program']][$row['project']] += $row['score'];
 			}
+			//行数据处理
+			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			$row['project'] = $program_project[$row['program']]['project'][$row['project']];
 			$row['program'] = $program_project[$row['program']]['name'];
-			dump($row);
 		}
-	dump($sum);
+		//数据处理，数字转项目全称
+		foreach($sum as $id => &$val){
+			foreach($val as $program => &$program_val){
+				if(is_array($program_val)){
+					foreach($program_val as $project => $project_val){
+						if(is_int($project)){
+							$program_val[$program_project[$program]['project'][$project]] = $project_val;
+							unset($program_val[$project]);
+						}
+					}
+				}
+				if(is_int($program)){
+					$val[$program_project[$program]['name']] = $program_val;
+					unset($val[$program]);
+				}
+			}
+		}
+		return json_encode($sum);
 	}
 	
 	public function add(){
-		$data = [];
-		$data['id'] =5;
-		$data['user_id'] = 2;
-		$data['school_term'] = '2017-2018';
-		$data['program'] = '1';
-		$data['project'] = '1';
-		$data['creat_user_id'] = 2;
-		$data['score'] = 3;
-		$data['update_time'] = '123123123';
-		$data['update_user_id'] = 2;
-		$model = new Service();
-		$affected = $model -> allowField(true) -> save($data);
+		$user_id = get_user_id();
+		check_role_level(1);
+		$data = Request::instance()->post();
+		$data['update_user_id'] = $user_id;
+		$data['update_time'] = time();
+		$row = (new Service) -> allowField(true) -> save($data);
+		if($row){
+			return json_return_with_msg(1,'Successfully added');
+		}else{
+			return json_return_with_msg(0,'add false');
+		}
+	}
+	
+	public function revise_single(){
+		$user_id = get_user_id();
+		check_role_level(1);
+		if($id = (int)Request::instance()->param('id')){
+			$where = ['id' => $id];
+		}else{
+			return json_return_with_msg(0,'get ID error');
+		}
+		if($score = (int)Request::instance()->param('score')){
+			$data = [];
+			$data['score'] = $score;
+		}else{
+			return json_return_with_msg(0,'get score error');
+		}
+		$data['update_user_id'] = $user_id;
+		$data['update_time'] = time();
+		$row = (new Service) -> allowField(true) -> save($data,$where);
+		if($row){
+			return json_return_with_msg(1,'Successfully revised');
+		}else{
+			return json_return_with_msg(0,'Revise false');
+		}
+	}
+	
+	public function login(){
+		$user_id = 1;
+		Session::set('user_id',$user_id);
+		$role_id = Db::table('hrms_member')->where('userid',$user_id)->value('roleid');
+		Session::set('role_id',$role_id);
 	}
 	
 }
