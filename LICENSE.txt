@@ -12,3 +12,8 @@ Theme upload
 2017 12-7 11:00
 1.member 表增加 bind_staff_id 字段
 2.增加service服务量表
+
+2017.12.12 16.25
+1.更新service模块
+2.更新application/common.php
+3.更新sql
