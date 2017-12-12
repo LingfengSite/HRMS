@@ -80,9 +80,9 @@ class index extends \think\Controller
 		$data['update_time'] = time();
 		$row = (new Service) -> allowField(true) -> save($data);
 		if($row){
-			return json_return_with_msg(1,'Successfully added');
+			return json_return_with_msg(200,'Successfully added');
 		}else{
-			return json_return_with_msg(0,'add false');
+			return json_return_with_msg(404,'add false');
 		}
 	}
 	/*
@@ -99,21 +99,21 @@ class index extends \think\Controller
 		if($id = (int)Request::instance()->param('id')){
 			$where = ['id' => $id];
 		}else{
-			return json_return_with_msg(0,'get ID error');
+			return json_return_with_msg(404,'get ID error');
 		}
 		if($score = (int)Request::instance()->param('score')){
 			$data = [];
 			$data['score'] = $score;
 		}else{
-			return json_return_with_msg(0,'get score error');
+			return json_return_with_msg(404,'get score error');
 		}
 		$data['update_user_id'] = $user_id;
 		$data['update_time'] = time();
 		$row = (new Service) -> allowField(true) -> save($data,$where);
 		if($row){
-			return json_return_with_msg(1,'Successfully revised');
+			return json_return_with_msg(200,'Successfully revised');
 		}else{
-			return json_return_with_msg(0,'Revise false');
+			return json_return_with_msg(404,'Revise false');
 		}
 	}
 	
