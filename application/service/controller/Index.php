@@ -12,7 +12,13 @@ class index extends \think\Controller
 		return "1";
 	}
 	
-	//记分列表
+	/*
+		functionName:服务量列表
+		method        GET
+
+		date:2017-12-12
+		Author:Louis
+	*/
 	public function score_list()
 	{	
 	    $program_project =  include APP_PATH.'service/program_project.php';
@@ -56,7 +62,16 @@ class index extends \think\Controller
 		}
 		return json_encode($sum);
 	}
-	
+	/*
+		functionName:添加服务量数据
+		method        POST
+		@program_id   课程id
+		@project_id   项目id
+		@school_team  学期
+		@score        分数
+		date:2017-12-12
+		Author:Louis
+	*/
 	public function add(){
 		$user_id = get_user_id();
 		check_role_level(1);
@@ -70,7 +85,14 @@ class index extends \think\Controller
 			return json_return_with_msg(0,'add false');
 		}
 	}
-	
+	/*
+		functionName:单条修改
+		method         POST/GET 
+		@id	           服务量记录id
+		@score         分数
+		date:2017-12-12
+		Author:Louis
+	*/
 	public function revise_single(){
 		$user_id = get_user_id();
 		check_role_level(1);
@@ -95,6 +117,15 @@ class index extends \think\Controller
 		}
 	}
 	
+	/*
+		functionName:登陆
+		method      POST
+		@username   用户名
+		@password   密码
+		@code       验证码
+		date:2017-12-12
+		Author:Louis
+	*/
 	public function login(){
 		$user_id = 1;
 		Session::set('user_id',$user_id);
