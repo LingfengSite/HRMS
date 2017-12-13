@@ -143,22 +143,40 @@ class index extends \think\Controller
 			return json_return_with_msg(404,'Revise false');
 		}
 	}
-	
-	
-	
+
 	/*
 	functionName:意见提交
 	method         POST
-	@score_id      记录ID
+	@id      记录ID
 	@comment       意见内容
 	date:2017-12-13
 	Author:Louis
 	*/
 	public function comment_submit(){
 		$user_id = get_user_id();
-		$role_id = check_role_level(0,true);
-		$score_id = Request::instance()->param('score_id');
+		check_role_level(0,true);
+		$id = (int)Request::instance()->param('id');
+		if(isset($id)){
+			if($user_id != $id){
+				return json_return_with_msg(404,'only allow to comment own score');
+			}
+			$where['id'] = $id;
+		}else{
+			return json_return_with_msg(404,'plz submit id');
+		}
 		$comment = Request::instance()->param('comment');
+		if(isset($comment)){
+			$data[];
+			$data['comment'] = $comment;
+		}else{
+			return json_return_with_msg(404,'plz submit comment');
+		}
+		$row = (new Service) -> allowField(true) -> save($data,$where);
+		if($row){
+			return json_return_with_msg(200,'Successfully submit');
+		}else{
+			return json_return_with_msg(404,'submit false');
+		}
 	}
 	
 	
