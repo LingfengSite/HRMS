@@ -21,9 +21,9 @@ class index extends \think\Controller
 	*/
 	public function score_list()
 	{	
-		$no_sum = Request::instance()->param('no_sum');
 		$user_id = get_user_id();
 		$role_id = check_role_level(0,true);
+		$get_sum = Request::instance()->param('get_sum');
 	    $program_project =  include APP_PATH.'service/program_project.php';
 		$sum = array();
 		$map = [];
@@ -48,41 +48,44 @@ class index extends \think\Controller
 			if($row['project'] == 0 || $row['program'] == 0){
 				continue;
 			}
+			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			//个人分数统计
-			if(empty($sum[$row['user_id']])){
-				$sum[$row['user_id']]['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
-			}
-			if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
-				$sum[$row['user_id']][$row['program']][$row['project']] = $row['score'];
-			}else{
-				$sum[$row['user_id']][$row['program']][$row['project']] += $row['score'];
+			if(isset($get_sum)){
+				if(empty($sum[$row['user_id']])){
+					$sum[$row['user_id']]['name'] = $row['name'];
+				}
+				if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
+					$sum[$row['user_id']][$row['program']][$row['project']] = $row['score'];
+				}else{
+					$sum[$row['user_id']][$row['program']][$row['project']] += $row['score'];
+				}
 			}
 			//行数据处理
-			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			//$row['project'] = $program_project[$row['program']]['project'][$row['project']];
 			//$row['program'] = $program_project[$row['program']]['name'];
 		}
-		if(isset($no_sum)){
-			return json_encode($list);
-		}
-		//数据处理，数字转项目全称
-		foreach($sum as $id => &$val){
-			foreach($val as $program => &$program_val){
-				if(is_array($program_val)){
-					foreach($program_val as $project => $project_val){
-						if(is_int($project)){
-							$program_val[$program_project[$program]['project'][$project]] = $project_val;
-							unset($program_val[$project]);
+		if(isset($get_sum)){
+				//数据处理，数字转项目全称
+			foreach($sum as $id => &$val){
+				foreach($val as $program => &$program_val){
+					if(is_array($program_val)){
+						foreach($program_val as $project => $project_val){
+							if(is_int($project)){
+								$program_val[$program_project[$program]['project'][$project]] = $project_val;
+								unset($program_val[$project]);
+							}
 						}
 					}
-				}
-				if(is_int($program)){
-					$val[$program_project[$program]['name']] = $program_val;
-					unset($val[$program]);
+					if(is_int($program)){
+						$val[$program_project[$program]['name']] = $program_val;
+						unset($val[$program]);
+					}
 				}
 			}
+			return json_encode($sum);
+		}else{
+			return json_encode($list);
 		}
-		return json_encode($sum);
 	}
 	/*
 		functionName:添加服务量数据
@@ -171,5 +174,9 @@ class index extends \think\Controller
 		Session::set('role_id',$role_id);
 		
 	}
-	
+	public function return_program_project(){
+		check_role_level(0);
+		$program_project =  include APP_PATH.'service/program_project.php';
+		return json_encode($program_project);
+	}
 }
