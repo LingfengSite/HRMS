@@ -21,6 +21,7 @@ class index extends \think\Controller
 	*/
 	public function score_list()
 	{	
+		$get_sum = Request::instance()->param('no_sum');
 		$user_id = get_user_id();
 		$role_id = check_role_level(0,true);
 		echo $role_id;
@@ -62,6 +63,9 @@ class index extends \think\Controller
 			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			$row['project'] = $program_project[$row['program']]['project'][$row['project']];
 			$row['program'] = $program_project[$row['program']]['name'];
+		}
+		if(isset($no_sum)){
+			return json_encode($list);
 		}
 		//数据处理，数字转项目全称
 		foreach($sum as $id => &$val){
