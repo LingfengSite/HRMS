@@ -15,15 +15,35 @@ class index extends \think\Controller
 	/*
 		functionName:服务量列表
 		method        GET
-
+		@state        记分状态，有异议为1，正常为0
 		date:2017-12-12
 		Author:Louis
 	*/
 	public function score_list()
 	{	
+		$user_id = get_user_id();
+		$role_id = check_role_level(0,true);
+		echo $role_id;
 	    $program_project =  include APP_PATH.'service/program_project.php';
 		$sum = array();
-		$list = Service::select();
+		$map = [];
+		$state = Request::instance()->param('state');
+		if(isset($state)){
+			$map['state'] = (int)$state;
+		}
+		switch ($role_id){
+			case 0:
+			$map['user_id'] = $user_id;
+			break;
+			case 1:
+			$map['update_user_id'] = $user_id;
+			break;
+			case 2:
+			break;
+			default:
+			die(json_return_with_msg(0,'select data error cause role id, plz re-login'));
+		}
+		$list = Service::where($map)->select();
 		foreach($list as $row){
 			$row = $row -> getData();	
 			if($row['project'] == 0 || $row['program'] == 0){
@@ -127,10 +147,27 @@ class index extends \think\Controller
 		Author:Louis
 	*/
 	public function login(){
-		$user_id = 1;
+		/*
+		$username = (string)Request::instance()->param('username');
+		if(empty($username)){
+			return json_return_with_msg(404,'Please input username');
+		}
+		
+		$password = (string)Request::instance()->param('password');
+		if(empty($password)){
+			return json_return_with_msg(404,'Please input password');
+		}
+		*/
+		
+		$username = "刘圣麟";
+		//$password = md5('123456');
+		//Db::table('hrms_member')->where('username', $username)->update(['password' => $password]);
+		$user_id = Db::table('hrms_member')->where('username',$username)->value('userid');
+		
 		Session::set('user_id',$user_id);
 		$role_id = Db::table('hrms_member')->where('userid',$user_id)->value('roleid');
 		Session::set('role_id',$role_id);
+		
 	}
 	
 }
