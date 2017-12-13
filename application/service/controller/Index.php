@@ -49,6 +49,7 @@ class index extends \think\Controller
 				continue;
 			}
 			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
+			$row['update_user_id'] = Db::table('hrms_member')->where('userid',$row['update_user_id'])->value('username');
 			//个人分数统计
 			if(isset($get_sum)){
 				if(empty($sum[$row['user_id']])){
