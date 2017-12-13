@@ -91,6 +91,7 @@ class index extends \think\Controller
 	/*
 		functionName:添加服务量数据
 		method        POST
+		@user_id   被添加教师ID
 		@program_id   课程id
 		@project_id   项目id
 		@school_team  学期
@@ -99,10 +100,10 @@ class index extends \think\Controller
 		Author:Louis
 	*/
 	public function add(){
-		$user_id = get_user_id();
+		$admin_id = get_user_id();
 		check_role_level(1);
-		$data = Request::instance()->post();
-		$data['update_user_id'] = $user_id;
+		$data = Request::instance()->param();
+		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
 		$row = (new Service) -> allowField(true) -> save($data);
 		if($row){
@@ -142,6 +143,24 @@ class index extends \think\Controller
 			return json_return_with_msg(404,'Revise false');
 		}
 	}
+	
+	
+	
+	/*
+	functionName:意见提交
+	method         POST
+	@score_id      记录ID
+	@comment       意见内容
+	date:2017-12-13
+	Author:Louis
+	*/
+	public function comment_submit(){
+		$user_id = get_user_id();
+		$role_id = check_role_level(0,true);
+		$score_id = Request::instance()->param('score_id');
+		$comment = Request::instance()->param('comment');
+	}
+	
 	
 	/*
 		functionName:登陆
