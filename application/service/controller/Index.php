@@ -21,10 +21,9 @@ class index extends \think\Controller
 	*/
 	public function score_list()
 	{	
-		$get_sum = Request::instance()->param('no_sum');
+		$no_sum = Request::instance()->param('no_sum');
 		$user_id = get_user_id();
 		$role_id = check_role_level(0,true);
-		echo $role_id;
 	    $program_project =  include APP_PATH.'service/program_project.php';
 		$sum = array();
 		$map = [];
@@ -44,9 +43,8 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(0,'select data error cause role id, plz re-login'));
 		}
-		$list = Service::where($map)->select();
-		foreach($list as $row){
-			$row = $row -> getData();	
+		$list = Db::table('hrms_service')->where($map)->select();
+		foreach($list as &$row){
 			if($row['project'] == 0 || $row['program'] == 0){
 				continue;
 			}
@@ -61,8 +59,8 @@ class index extends \think\Controller
 			}
 			//行数据处理
 			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
-			$row['project'] = $program_project[$row['program']]['project'][$row['project']];
-			$row['program'] = $program_project[$row['program']]['name'];
+			//$row['project'] = $program_project[$row['program']]['project'][$row['project']];
+			//$row['program'] = $program_project[$row['program']]['name'];
 		}
 		if(isset($no_sum)){
 			return json_encode($list);
