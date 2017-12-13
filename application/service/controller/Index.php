@@ -166,7 +166,8 @@ class index extends \think\Controller
 		}
 		$comment = Request::instance()->param('comment');
 		if(isset($comment)){
-			$data[];
+			$data=[];
+			$data['state'] = 1;
 			$data['comment'] = $comment;
 		}else{
 			return json_return_with_msg(404,'plz submit comment');
