@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-14 10:08:12
+Date: 2017-12-14 14:32:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -50,12 +50,11 @@ CREATE TABLE `hrms_service` (
   `program` int(6) NOT NULL,
   `project` int(6) NOT NULL,
   `date` int(11) NOT NULL,
-  `duration` int(6) NOT NULL,
+  `duration` float(6,0) NOT NULL,
   `update_time` int(11) NOT NULL,
   `update_user_id` int(6) NOT NULL,
   `state` tinyint(1) unsigned zerofill DEFAULT '0',
   `comment` text,
-  `charge` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`update_user_id`,`program`,`project`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -63,11 +62,30 @@ CREATE TABLE `hrms_service` (
 -- ----------------------------
 -- Records of hrms_service
 -- ----------------------------
-INSERT INTO `hrms_service` VALUES ('1', '1', '2017-2018', '2', '2', '0', '2', '1513066553', '1', '0', null, null);
-INSERT INTO `hrms_service` VALUES ('2', '2', '2017-2018', '3', '3', '0', '2', '1513048562', '1', '0', null, null);
-INSERT INTO `hrms_service` VALUES ('3', '2', '2017-2018', '3', '3', '0', '2', '1513048562', '2', '0', null, null);
-INSERT INTO `hrms_service` VALUES ('4', '2', '2017-2018', '1', '6', '0', '3', '1513048562', '2', '0', null, null);
-INSERT INTO `hrms_service` VALUES ('5', '1', '2017-2018', '3', '2', '0', '3', '1513049709', '1', '1', null, null);
+INSERT INTO `hrms_service` VALUES ('1', '1', '2017-2018', '2', '2', '0', '2', '1513066553', '1', '0', null);
+INSERT INTO `hrms_service` VALUES ('2', '2', '2017-2018', '3', '3', '0', '2', '1513048562', '1', '0', null);
+INSERT INTO `hrms_service` VALUES ('3', '2', '2017-2018', '3', '3', '0', '2', '1513048562', '2', '0', null);
+INSERT INTO `hrms_service` VALUES ('4', '2', '2017-2018', '1', '6', '0', '3', '1513048562', '2', '0', null);
+INSERT INTO `hrms_service` VALUES ('5', '1', '2017-2018', '3', '2', '0', '3', '1513049709', '1', '1', null);
+
+-- ----------------------------
+-- Table structure for hrms_service_standard
+-- ----------------------------
+DROP TABLE IF EXISTS `hrms_service_standard`;
+CREATE TABLE `hrms_service_standard` (
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  `user_id` int(6) NOT NULL,
+  `school_term` varchar(20) NOT NULL,
+  `standard` float(6,0) NOT NULL,
+  `update_time` int(11) NOT NULL,
+  `update_user_id` int(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of hrms_service_standard
+-- ----------------------------
+INSERT INTO `hrms_service_standard` VALUES ('1', '1', '2017-2018', '10', '0', '0');
 
 -- ----------------------------
 -- Table structure for hrms_workload

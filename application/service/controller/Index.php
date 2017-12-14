@@ -137,26 +137,54 @@ class index extends \think\Controller
 		Author:Louis
 	*/
 	public function revise_single(){
-		$user_id = get_user_id();
+		$admin_id = get_user_id();
 		check_role_level(1);
-		if($id = (int)Request::instance()->param('id')){
-			$where = ['id' => $id];
+		$param = Request::instance()->param();
+		if($param['id']){
+			$where = ['id' => (int)$param['id']];
 		}else{
 			return json_return_with_msg(404,'get ID error');
 		}
-		if($duration = (int)Request::instance()->param('duration')){
+		if($param['duration']){
 			$data = [];
-			$data['duration'] = $duration;
+			$data['duration'] = $param['duration'];
 		}else{
 			return json_return_with_msg(404,'get duration error');
 		}
-		$data['update_user_id'] = $user_id;
+		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
 		$row = (new Service) -> allowField(true) -> save($data,$where);
 		if($row){
 			return json_return_with_msg(200,'Successfully revised');
 		}else{
 			return json_return_with_msg(404,'Revise false');
+		}
+	}
+	
+	/*
+		functionName:  修改状态确认
+		method         POST/GET 
+		@id	           服务量记录id
+		date:2017-12-14
+		Author:Louis
+	*/
+	public function confirm_state(){
+		$admin_id = get_user_id();
+		check_role_level(1);
+		$param = Request::instance()->param();
+		if($param['id']){
+			$where = ['id' => (int)$param['id']];
+		}else{
+			return json_return_with_msg(404,'get ID error');
+		}
+		$data['update_user_id'] = $admin_id;
+		$data['update_time'] = time();
+		$data['state'] = 2;
+		$row = (new Service) -> allowField(true) -> save($data,$where);
+		if($row){
+			return json_return_with_msg(200,'Successfully confirm');
+		}else{
+			return json_return_with_msg(404,'confirm false');
 		}
 	}
 
@@ -170,21 +198,22 @@ class index extends \think\Controller
 	*/
 	public function comment_submit(){
 		$user_id = get_user_id();
-		check_role_level(0,true);
-		$id = (int)Request::instance()->param('id');
-		if(isset($id)){
-			if($user_id != $id){
+		check_role_level(0);
+		$param = Request::instance()->param();
+		//$id = (int)Request::instance()->param('id');
+		if(isset($param['id'])){
+			if($user_id != (int)$param['id']){
 				return json_return_with_msg(404,'only allow to comment own duration');
 			}
-			$where['id'] = $id;
+			$where['id'] = (int)$param['id'];
 		}else{
 			return json_return_with_msg(404,'plz submit id');
 		}
-		$comment = Request::instance()->param('comment');
-		if(isset($comment)){
+		//$comment = Request::instance()->param('comment');
+		if(isset($param['comment'])){
 			$data=[];
 			$data['state'] = 1;
-			$data['comment'] = $comment;
+			$data['comment'] = $param['comment'];
 		}else{
 			return json_return_with_msg(404,'plz submit comment');
 		}
@@ -196,6 +225,92 @@ class index extends \think\Controller
 		}
 	}
 	
+	/*
+	function       服务量标准修改
+	method         POST
+	@id            标准记录ID
+	@school_term   学期
+	@standard      学期标准时长
+	date           2017-12-14
+	Author         Louis
+	*/
+	public function standard_edit(){
+		$admin_id = get_user_id();
+		check_role_level(2);
+		$param = Request::instance()->param();
+		if(!isset($param['id']) || !isset($param['school_term']) || !isset($param['standard'])){
+			return json_return_with_msg(404,'param submit false');
+		}
+		$map['id'] = (int)$param['id'];
+		$data['school_term'] = $param['school_term'];
+		$data['standard'] = $param['standard'];
+		$data['update_user_id'] = $admin_id;
+		$data['update_time'] = time();
+		$row = Db::table('hrms_service_standard')->where($map)->update($data);
+		if($row){
+			return json_return_with_msg(200,'Successfully edit');
+		}else{
+			return json_return_with_msg(404,'edit false');
+		}
+	}
+	
+	/*
+	function       服务量标准增加
+	method         POST
+	@user_id       被添加用户的ID
+	@school_term   学期
+	@standard      学期标准时长
+	date           2017-12-14
+	Author         Louis
+	*/
+	public function standard_add(){
+		$admin_id = get_user_id();
+		check_role_level(2);
+		$param = Request::instance()->param();
+		if(!isset($param['user_id']) || !isset($param['school_term']) || !isset($param['standard'])){
+			return json_return_with_msg(404,'param submit false');
+		}
+		$map['user_id'] = (int)$param['user_id'];
+		$map['school_term'] = $param['school_term'];
+		$have_school_term = Db::table('hrms_service_standard')->where($map)->select();
+		if($have_school_term){
+			return json_return_with_msg(404,'error, school term already exists');
+		}
+		$data['user_id'] = $param['user_id'];
+		$data['school_term'] = $param['school_term'];
+		$data['standard'] = $param['standard'];
+		$data['update_user_id'] = $admin_id;
+		$data['update_time'] = time();
+		$row = Db::table('hrms_service_standard')->insert($data);
+		if($row){
+			return json_return_with_msg(200,'Successfully add');
+		}else{
+			return json_return_with_msg(404,'add false');
+		}
+	}
+	
+	/*
+	function       服务量标准json返回
+	method         get
+	date           2017-12-14
+	Author         Louis
+	*/
+	
+	public function service_standard_json_return(){
+		$user_id = get_user_id();
+		$role_id = check_role_level(0,true);
+		$map = [];
+		if($role_id == 0){
+			$map['user_id'] = $user_id;
+		}
+		$list= Db::table('hrms_service_standard')->where($map)->select();
+		if($list){
+			return json_encode($list);
+		}else{
+			return json_return_with_msg(404,'get standard false');
+		}
+		
+	}
 	
 	/*
 		functionName:登陆
