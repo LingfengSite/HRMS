@@ -18,6 +18,7 @@ class index extends \think\Controller
 		@state        记分状态，有异议为1，正常为0
 		@page         页数
 		@page_num     每页条数
+		@school_team  学年
 		date:2017-12-12
 		Author:Louis
 	*/
@@ -48,6 +49,9 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(0,'select data error cause role id, plz re-login'));
 		}
+		if(isset($param['school_team']) && is_string($param['school_team'])){
+			$map['school_team'] = $param['school_team'];
+		}
 		if(!isset($param['page']) || !is_int($param['page'])){
 			$param['page'] = 1;
 		}
@@ -61,15 +65,15 @@ class index extends \think\Controller
 			}
 			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			$row['update_user_id'] = Db::table('hrms_member')->where('userid',$row['update_user_id'])->value('username');
-			//个人分数统计
+			//个人时长统计
 			if(isset($param['get_sum'])){
 				if(empty($sum[$row['user_id']])){
 					$sum[$row['user_id']]['name'] = $row['name'];
 				}
 				if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
-					$sum[$row['user_id']][$row['program']][$row['project']] = $row['score'];
+					$sum[$row['user_id']][$row['program']][$row['project']] = $row['duration'];
 				}else{
-					$sum[$row['user_id']][$row['program']][$row['project']] += $row['score'];
+					$sum[$row['user_id']][$row['program']][$row['project']] += $row['duration'];
 				}
 			}
 			//行数据处理
@@ -102,11 +106,12 @@ class index extends \think\Controller
 	/*
 		functionName:添加服务量数据
 		method        POST
-		@user_id   被添加教师ID
+		@user_id      被添加教师ID
 		@program_id   课程id
 		@project_id   项目id
 		@school_team  学期
-		@score        分数
+		@duration        时长
+		@date         服务日期
 		date:2017-12-12
 		Author:Louis
 	*/
@@ -127,7 +132,7 @@ class index extends \think\Controller
 		functionName:单条修改
 		method         POST/GET 
 		@id	           服务量记录id
-		@score         分数
+		@duration         时长
 		date:2017-12-12
 		Author:Louis
 	*/
@@ -139,11 +144,11 @@ class index extends \think\Controller
 		}else{
 			return json_return_with_msg(404,'get ID error');
 		}
-		if($score = (int)Request::instance()->param('score')){
+		if($duration = (int)Request::instance()->param('duration')){
 			$data = [];
-			$data['score'] = $score;
+			$data['duration'] = $duration;
 		}else{
-			return json_return_with_msg(404,'get score error');
+			return json_return_with_msg(404,'get duration error');
 		}
 		$data['update_user_id'] = $user_id;
 		$data['update_time'] = time();
@@ -169,7 +174,7 @@ class index extends \think\Controller
 		$id = (int)Request::instance()->param('id');
 		if(isset($id)){
 			if($user_id != $id){
-				return json_return_with_msg(404,'only allow to comment own score');
+				return json_return_with_msg(404,'only allow to comment own duration');
 			}
 			$where['id'] = $id;
 		}else{
