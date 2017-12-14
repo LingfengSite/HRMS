@@ -230,23 +230,23 @@ class index extends \think\Controller
 	method         POST
 	@id            标准记录ID
 	@school_term   学期
-	@standard      学期标准时长
+	@service_standard      学期标准时长
 	date           2017-12-14
 	Author         Louis
 	*/
-	public function standard_edit(){
+	public function service_standard_edit(){
 		$admin_id = get_user_id();
 		check_role_level(2);
 		$param = Request::instance()->param();
-		if(!isset($param['id']) || !isset($param['school_term']) || !isset($param['standard'])){
+		if(!isset($param['id']) || !isset($param['school_term']) || !isset($param['service_standard'])){
 			return json_return_with_msg(404,'param submit false');
 		}
 		$map['id'] = (int)$param['id'];
 		$data['school_term'] = $param['school_term'];
-		$data['standard'] = $param['standard'];
+		$data['service_standard'] = $param['service_standard'];
 		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
-		$row = Db::table('hrms_service_standard')->where($map)->update($data);
+		$row = Db::table('hrms_standard')->where($map)->update($data);
 		if($row){
 			return json_return_with_msg(200,'Successfully edit');
 		}else{
@@ -259,29 +259,29 @@ class index extends \think\Controller
 	method         POST
 	@user_id       被添加用户的ID
 	@school_term   学期
-	@standard      学期标准时长
+	@service_standard      学期标准时长
 	date           2017-12-14
 	Author         Louis
 	*/
-	public function standard_add(){
+	public function service_standard_add(){
 		$admin_id = get_user_id();
 		check_role_level(2);
 		$param = Request::instance()->param();
-		if(!isset($param['user_id']) || !isset($param['school_term']) || !isset($param['standard'])){
+		if(!isset($param['user_id']) || !isset($param['school_term']) || !isset($param['service_standard'])){
 			return json_return_with_msg(404,'param submit false');
 		}
 		$map['user_id'] = (int)$param['user_id'];
 		$map['school_term'] = $param['school_term'];
-		$have_school_term = Db::table('hrms_service_standard')->where($map)->select();
+		$have_school_term = Db::table('hrms_standard')->where($map)->select();
 		if($have_school_term){
 			return json_return_with_msg(404,'error, school term already exists');
 		}
 		$data['user_id'] = $param['user_id'];
 		$data['school_term'] = $param['school_term'];
-		$data['standard'] = $param['standard'];
+		$data['service_standard'] = $param['service_standard'];
 		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
-		$row = Db::table('hrms_service_standard')->insert($data);
+		$row = Db::table('hrms_standard')->insert($data);
 		if($row){
 			return json_return_with_msg(200,'Successfully add');
 		}else{
@@ -295,7 +295,6 @@ class index extends \think\Controller
 	date           2017-12-14
 	Author         Louis
 	*/
-	
 	public function service_standard_json_return(){
 		$user_id = get_user_id();
 		$role_id = check_role_level(0,true);
@@ -303,7 +302,7 @@ class index extends \think\Controller
 		if($role_id == 0){
 			$map['user_id'] = $user_id;
 		}
-		$list= Db::table('hrms_service_standard')->where($map)->select();
+		$list= Db::table('hrms_standard')->where($map)->select();
 		if($list){
 			return json_encode($list);
 		}else{
@@ -312,38 +311,6 @@ class index extends \think\Controller
 		
 	}
 	
-	/*
-		functionName:登陆
-		method      POST
-		@username   用户名
-		@password   密码
-		@code       验证码
-		date:2017-12-12
-		Author:Louis
-	*/
-	public function login(){
-		/*
-		$username = (string)Request::instance()->param('username');
-		if(empty($username)){
-			return json_return_with_msg(404,'Please input username');
-		}
-		
-		$password = (string)Request::instance()->param('password');
-		if(empty($password)){
-			return json_return_with_msg(404,'Please input password');
-		}
-		*/
-		
-		$username = "刘圣麟";
-		//$password = md5('123456');
-		//Db::table('hrms_member')->where('username', $username)->update(['password' => $password]);
-		$user_id = Db::table('hrms_member')->where('username',$username)->value('userid');
-		
-		Session::set('user_id',$user_id);
-		$role_id = Db::table('hrms_member')->where('userid',$user_id)->value('roleid');
-		Session::set('role_id',$role_id);
-		
-	}
 	public function return_program_project(){
 		check_role_level(0);
 		$program_project =  include APP_PATH.'service/program_project.php';

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-14 14:32:37
+Date: 2017-12-14 17:26:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -37,7 +37,7 @@ CREATE TABLE `hrms_member` (
 -- ----------------------------
 -- Records of hrms_member
 -- ----------------------------
-INSERT INTO `hrms_member` VALUES ('1', '刘圣麟', 'e10adc3949ba59abbe56e057f20f883e', 'md5', null, '0', null, '2', '', '');
+INSERT INTO `hrms_member` VALUES ('1', '刘圣麟', '7ab8853d7daaa0908f14b3a28f0aaf49', '189266', '127.0.0.1', '1513242932', null, '2', '', '');
 
 -- ----------------------------
 -- Table structure for hrms_service
@@ -69,23 +69,25 @@ INSERT INTO `hrms_service` VALUES ('4', '2', '2017-2018', '1', '6', '0', '3', '1
 INSERT INTO `hrms_service` VALUES ('5', '1', '2017-2018', '3', '2', '0', '3', '1513049709', '1', '1', null);
 
 -- ----------------------------
--- Table structure for hrms_service_standard
+-- Table structure for hrms_standard
 -- ----------------------------
-DROP TABLE IF EXISTS `hrms_service_standard`;
-CREATE TABLE `hrms_service_standard` (
+DROP TABLE IF EXISTS `hrms_standard`;
+CREATE TABLE `hrms_standard` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
   `user_id` int(6) NOT NULL,
   `school_term` varchar(20) NOT NULL,
-  `standard` float(6,0) NOT NULL,
+  `wordland_standard` float(6,0) NOT NULL,
+  `service_standard` float(6,0) NOT NULL,
   `update_time` int(11) NOT NULL,
   `update_user_id` int(6) NOT NULL,
+  `state` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of hrms_service_standard
+-- Records of hrms_standard
 -- ----------------------------
-INSERT INTO `hrms_service_standard` VALUES ('1', '1', '2017-2018', '10', '0', '0');
+INSERT INTO `hrms_standard` VALUES ('1', '1', '2017-2018', '0', '10', '0', '0', null);
 
 -- ----------------------------
 -- Table structure for hrms_workload
