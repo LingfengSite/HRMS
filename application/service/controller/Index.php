@@ -16,6 +16,8 @@ class index extends \think\Controller
 		functionName:服务量列表
 		method        GET
 		@state        记分状态，有异议为1，正常为0
+		@page         页数
+		@page_num     每页条数
 		date:2017-12-12
 		Author:Louis
 	*/
@@ -23,13 +25,16 @@ class index extends \think\Controller
 	{	
 		$user_id = get_user_id();
 		$role_id = check_role_level(0,true);
-		$get_sum = Request::instance()->param('get_sum');
 	    $program_project =  include APP_PATH.'service/program_project.php';
 		$sum = array();
 		$map = [];
-		$state = Request::instance()->param('state');
-		if(isset($state)){
-			$map['state'] = (int)$state;
+		$param = Request::instance()->param();
+		//$get_sum = Request::instance()->param('get_sum');
+		//$state = Request::instance()->param('state');
+		//$page = Request::instance()->param('page');
+		//$page_num = Request::instance()->param('page_num');
+		if(isset($param['state'])){
+			$map['state'] = (int)$param['state'];
 		}
 		switch ($role_id){
 			case 0:
@@ -43,7 +48,13 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(0,'select data error cause role id, plz re-login'));
 		}
-		$list = Db::table('hrms_service')->where($map)->select();
+		if(!isset($param['page']) || !is_int($param['page'])){
+			$param['page'] = 1;
+		}
+		if(!isset($param['page_num']) || !is_int($param['page_num'])){
+			$param['page_num'] = 20;
+		}
+		$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
 		foreach($list as &$row){
 			if($row['project'] == 0 || $row['program'] == 0){
 				continue;
@@ -51,7 +62,7 @@ class index extends \think\Controller
 			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
 			$row['update_user_id'] = Db::table('hrms_member')->where('userid',$row['update_user_id'])->value('username');
 			//个人分数统计
-			if(isset($get_sum)){
+			if(isset($param['get_sum'])){
 				if(empty($sum[$row['user_id']])){
 					$sum[$row['user_id']]['name'] = $row['name'];
 				}
@@ -65,7 +76,7 @@ class index extends \think\Controller
 			//$row['project'] = $program_project[$row['program']]['project'][$row['project']];
 			//$row['program'] = $program_project[$row['program']]['name'];
 		}
-		if(isset($get_sum)){
+		if(isset($param['get_sum'])){
 				//数据处理，数字转项目全称
 			foreach($sum as $id => &$val){
 				foreach($val as $program => &$program_val){
