@@ -6,7 +6,7 @@ class Getdata extends \think\Controller
 	private $users;
 
 	public function __construct(){ 
-        $this->users = Db::table('hrms_member')->column('userid','username');
+        $this->users = Db::table('hrms_member')->field('userid,username')->select();;
     } 
 
 	/*
