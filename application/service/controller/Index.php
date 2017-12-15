@@ -179,6 +179,7 @@ class index extends \think\Controller
 		}
 		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
+		//行政人员确认修改后state为2
 		$data['state'] = 2;
 		$row = (new Service) -> allowField(true) -> save($data,$where);
 		if($row){
@@ -200,7 +201,6 @@ class index extends \think\Controller
 		$user_id = get_user_id();
 		check_role_level(0);
 		$param = Request::instance()->param();
-		//$id = (int)Request::instance()->param('id');
 		if(isset($param['id'])){
 			if($user_id != (int)$param['id']){
 				return json_return_with_msg(404,'only allow to comment own duration');
@@ -212,6 +212,7 @@ class index extends \think\Controller
 		//$comment = Request::instance()->param('comment');
 		if(isset($param['comment'])){
 			$data=[];
+		//有异议state为1，正常为0, 行政确认修改后为2
 			$data['state'] = 1;
 			$data['comment'] = $param['comment'];
 		}else{
