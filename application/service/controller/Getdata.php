@@ -6,7 +6,7 @@ class Getdata extends \think\Controller
 	private $users;
 
 	public function __construct(){ 
-        $this->users = Db::table('hrms_member')->field('userid,username')->select();;
+        $this->users = Db::table('hrms_member')->field('userid,username')->select();
     } 
 
 	/*
@@ -49,6 +49,15 @@ class Getdata extends \think\Controller
 	public function return_program_project(){
 		check_role_level(0);
 		$program_project =  include APP_PATH.'service/program_project.php';
+		return json_encode($program_project);
+	}
+	
+	public function return_program_project_flip(){
+		check_role_level(0);
+		$program_project =  include APP_PATH.'service/program_project.php';
+		foreach($program_project as $key => &$value){
+			$value['project']=array_flip($value['project']);
+		}
 		return json_encode($program_project);
 	}
 	
