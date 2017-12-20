@@ -48,17 +48,17 @@ class User extends \think\Controller
 			return json_return_with_msg(404,'plu input verify code');
 		}
 		if(!isset($param['username'])){
-			return json_return_with_msg(404,'plu input username');
+			return json_return_with_msg(412,'plu input username');
 		}
 		if(!isset($param['password'])){
-			return json_return_with_msg(404,'plu input password');
+			return json_return_with_msg(412,'plu input password');
 		}
 		if(!$this->check_verify($param['code'])){
-			return json_return_with_msg(404,'verify code error');
+			return json_return_with_msg(403,'verify code error');
 		}
 		$user_info = Db::table('hrms_member')->where('username',$param['username'])->field('userid,roleid,password,encrypt')->find();
 		if($user_info['password'] != md5(md5($param['password']).$user_info['encrypt'])){
-			return json_return_with_msg(404,'password error');
+			return json_return_with_msg(401,'password error');
 		}
 		//$user_IP = ($_SERVER["HTTP_VIA"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
 		$user_IP = $_SERVER["REMOTE_ADDR"];
