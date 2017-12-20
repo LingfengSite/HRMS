@@ -58,13 +58,15 @@ class index extends \think\Controller
 		if(!isset($param['page_num']) || !is_int($param['page_num'])){
 			$param['page_num'] = 20;
 		}
+		try{
 		$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
+		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
-			if($row['project'] == 0 || $row['program'] == 0){
+			if( (isset($row['project']) && ($row['project'] == 0)) || (isset($row['program']) && ($row['program'] == 0))){
 				continue;
 			}
-			$row['name'] = Db::table('hrms_member')->where('userid',$row['user_id'])->value('username');
-			$row['update_user_id'] = Db::table('hrms_member')->where('userid',$row['update_user_id'])->value('username');
+			$row['name'] = $user_list[$row['user_id']];
+			$row['update_user_name'] = $user_list[$row['update_user_id']];
 			//个人时长统计
 			if(isset($param['get_sum'])){
 				if(empty($sum[$row['user_id']])){
@@ -79,6 +81,12 @@ class index extends \think\Controller
 			//行数据处理
 			//$row['project'] = $program_project[$row['program']]['project'][$row['project']];
 			//$row['program'] = $program_project[$row['program']]['name'];
+		}
+		$data['code'] = 200;
+		$data['msg'] = "get list successfully";
+		$data['data'] = $list;
+		}catch(\Exception $e){
+			return $e;
 		}
 		if(isset($param['get_sum'])){
 				//数据处理，数字转项目全称
@@ -100,7 +108,7 @@ class index extends \think\Controller
 			}
 			return json_encode($sum);
 		}else{
-			return json_encode($list);
+			return json_encode($data);
 		}
 	}
 	/*
