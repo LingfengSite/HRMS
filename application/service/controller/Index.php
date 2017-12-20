@@ -107,9 +107,9 @@ class index extends \think\Controller
 		functionName:添加服务量数据
 		method        POST
 		@user_id      被添加教师ID
-		@program_id   课程id
-		@project_id   项目id
-		@school_team  学期
+		@program   课程id
+		@project   项目id
+		@school_term  学期
 		@duration        时长
 		@date         服务日期
 		date:2017-12-12
@@ -121,18 +121,26 @@ class index extends \think\Controller
 		$data = Request::instance()->param();
 		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
+		try{
 		$row = (new Service) -> allowField(true) -> save($data);
 		if($row){
 			return json_return_with_msg(200,'Successfully added');
 		}else{
 			return json_return_with_msg(404,'add false');
 		}
+		}catch(\Exception $e){
+			return $e;
+		}
 	}
 	/*
 		functionName:单条修改
-		method         POST/GET 
-		@id	           服务量记录id
-		@duration         时长
+		method          POST/GET 
+		@id	            服务量记录id
+		@duration       时长
+		@school_term    学期       #字符串
+		@program        课程id
+		@project        项目id
+		@date           服务日期   #时间戳
 		date:2017-12-12
 		Author:Louis
 	*/
@@ -145,19 +153,20 @@ class index extends \think\Controller
 		}else{
 			return json_return_with_msg(404,'get ID error');
 		}
-		if($param['duration']){
-			$data = [];
-			$data['duration'] = $param['duration'];
-		}else{
-			return json_return_with_msg(404,'get duration error');
+		if(!isset($param['duration']) || !isset($param['school_term']) || !isset($param['program']) || !isset($param['project']) || !isset($param['date']) ){
+			return json_return_with_msg(404,'get param error, plz input one param at lastest');
 		}
-		$data['update_user_id'] = $admin_id;
-		$data['update_time'] = time();
-		$row = (new Service) -> allowField(true) -> save($data,$where);
+		$param['update_user_id'] = $admin_id;
+		$param['update_time'] = time();
+		try{
+		$row = (new Service) -> allowField(true) -> save($param,$where);
 		if($row){
 			return json_return_with_msg(200,'Successfully revised');
 		}else{
 			return json_return_with_msg(404,'Revise false');
+		}
+		}catch(\Exception $e){
+			return $e;
 		}
 	}
 	
