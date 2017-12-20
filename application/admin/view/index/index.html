@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>PHBS</title>
+	<meta name="description" content="Peking University HSBC Business School was founded in 2002 as Peking University Shenzhen Business School with the intent of advancing PKU’s involvement in global finance research and establishing a first-tier business graduate program in southern mainland" />
+	<meta name="keywords" content="admin, admin dashboard, admin template, cms, crm, Philbert Admin, Philbertadmin, premium admin templates, responsive admin, sass, panel, software, ui, visualization, web app, application" />
+	<meta name="author" content="hencework"/>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<!-- Morris Charts CSS -->
+    <link href="CSS_PATH/morris.css" rel="stylesheet" type="text/css"/>
+	<!-- Data table CSS -->
+	<link href="CSS_PATH/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+	<link href="CSS_PATH/jquery.toast.min.css" rel="stylesheet" type="text/css">
+	<!-- Custom CSS -->
+	<link href="CSS_PATH/style.css" rel="stylesheet" type="text/css">
+		<link href="CSS_PATH/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+	<!-- Preloader -->
+	<div class="preloader-it">
+		<div class="la-anim-1"></div>
+	</div>
+	<!-- /Preloader -->
+    <div class="wrapper theme-1-active pimary-color-green">
+		<!-- Top Menu Items -->
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="mobile-only-brand pull-left">
+				<div class="nav-header pull-left">
+					<div class="logo-wrap">
+						<a href="index.html">
+							<img class="brand-img" style="width:120px	" src="__ROOT__/statics/img/logo.png" alt="brand"/>
+							
+						</a>
+					</div>
+				</div>	
+				<a id="toggle_nav_btn" style="display:none!important" class="toggle-left-nav-btn inline-block ml-20 pull-left" href="javascript:void(0);"><i class="zmdi zmdi-menu"></i></a>
+				<a id="toggle_mobile_search" data-toggle="collapse" data-target="#search_form" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-search"></i></a>
+				<a id="toggle_mobile_nav" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-more"></i></a>
+				<form id="search_form" role="search" class="top-nav-search collapse pull-left">
+					<div class="input-group">
+						<input type="text" name="example-input1-group2" class="form-control" placeholder="Search">
+						<span class="input-group-btn">
+						<button type="button" class="btn  btn-default"  data-target="#search_form" data-toggle="collapse" aria-label="Close" aria-expanded="true"><i class="zmdi zmdi-search"></i></button>
+						</span>
+					</div>
+				</form>
+			</div>
+			<div id="mobile_only_nav" class="mobile-only-nav pull-right">
+				<ul class="nav navbar-right top-nav pull-right">
+					<li>
+						<a id="open_right_sidebar" href="#"><i class="zmdi zmdi-settings top-nav-icon"></i></a>
+					</li>
+					<li class="dropdown app-drp">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="zmdi zmdi-apps top-nav-icon"></i></a>
+						
+					</li>
+					<li class="dropdown full-width-drp">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="zmdi zmdi-more-vert top-nav-icon"></i></a>
+
+					</li>
+		
+					
+				</ul>
+			</div>	
+		</nav>
+		<!-- /Top Menu Items -->
+		
+		<!-- Left Sidebar Menu -->
+		<div class="fixed-sidebar-left">
+			<ul class="nav navbar-nav side-nav nicescroll-bar">
+				<li class="navigation-header">
+					<span>Main</span> 
+					<i class="zmdi zmdi-more"></i>
+				</li>
+				<li>
+					<a class="active" href="javascript:void(0);" data-toggle="collapse" data-target="#dashboard_dr"><div class="pull-left"><i class="zmdi zmdi-landscape mr-20"></i><span class="right-nav-text">Service</span></div><div class="pull-right"><i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+					<ul id="dashboard_dr" class="collapse collapse-level-1">
+						<li>
+							<a class="active-page" href="index.html">Service</a>
+						</li>
+						<li>
+							<a href="index2.html">Work</a>
+						</li>
+					</ul>
+				</li>
+			
+				
+
+			</ul>
+		</div>
+		<!-- /Left Sidebar Menu -->
+		
+		<!-- Right Sidebar Menu -->
+		<div class="fixed-sidebar-right">
+			<ul class="right-sidebar">
+				<li>
+					
+					
+				</li>
+			</ul>
+		</div>
+	</div>
+        <!-- Main Content -->
+		<div class="page-wrapper">
+            <div class="container-fluid pt-25">
+				<div class="panel panel-default card-view panel-refresh">
+					<div class="refresh-container">
+						<div class="la-anim-1"></div>
+					</div>
+					<div class="panel-heading">
+					<div class="pull-left">
+						<h6 class="panel-title txt-dark">Service</h6>
+					</div>
+					<div class="pull-right">
+						<a href="#" class="pull-left inline-block refresh mr-15">
+							<i class="zmdi zmdi-replay"></i>
+						</a>
+						<a href="#" class="pull-left inline-block full-screen mr-15">
+							<i class="zmdi zmdi-fullscreen"></i>
+						</a>
+						<a href="#" class="pull-left inline-block mr-15">
+							<i class="zmdi zmdi-download"></i>
+						</a>
+						{if $role_id==2}
+						<a href="#" onclick="AddServiceInit()" data-toggle="modal" data-target="#ServiceBox" class="pull-left inline-block mr-15">
+							<i class="zmdi zmdi-plus"></i>
+						</a>
+						{/if}
+						</div>
+						<div class="clearfix"></div>
+						</div>
+						<div class="panel-body row pa-0">
+						<div class="table-wrap">
+						<div class="table-responsive">
+					
+							<table class="table table-hover mb-0">
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>username</th>
+										<th>project</th>
+										<th>service</th>
+										<th>duration</th>
+										<th>update_time</th>
+										<th>update_user</th>
+										<th>state</th>
+										{if $role_id!=0}<th>modify</th>{/if}
+										<th>comment</th>
+									</tr>
+								</thead>
+								<tbody id="service-list">
+									<tr v-for="value in scoreList">
+										<td>{{value.id}}</td>
+										<td>{{value.name}}</td>
+										<td>{{value.program |setName}}</td>
+										<td>{{value.project |setName(value.program)}}</td>
+										<td>{{value.duration}}</td>
+										<td>{{value.update_time |time}}</td>
+										<td>{{value.update_user_id}}</td>
+										<td v-if="value.state==0">false</td>
+										<td v-else>true</td>
+										{if $role_id!=0}<td><button v-on:click="ModifyService(value.id,value.name,value.program,value.project,value.date,value.duration,value.school_term)" data-toggle="modal" data-target="#ServiceBox">modify</button></td>{/if}
+										<td><button v-on:click="comment(value.id,value.comment)" data-toggle="modal" data-target="#Comment">comment</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>	
+				</div>	
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="footer container-fluid pl-30 pr-30">
+		<div class="row">
+			<div class="col-sm-12">
+				<p>2017 &copy; . Pampered by PHBS</p>
+			</div>
+		</div>
+	</footer>
+			<!-- /Footer -->
+			
+	<!-- 添加框 -->
+	<div class="modal fade" id="ServiceBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">Add Service</h4>
+		  </div>
+		  <div class="modal-body">
+			<input type="hidden" id="serviceId"/>
+			<input type="hidden" id="teacherTg" v-model="teacherTg"/>
+			<div id="teacherOption">
+				选择教师：<select><option value="0">请选择教师</option><option v-for="(data, key, index) in teacherList" :value="data.userid">{{data.username}}</option></select></div>
+			<br/>
+			<div id="programOption">所属项目：
+				<select v-model="selected">
+					<option value="0">请选择项目</option>
+					<option v-for="(data, key, index) in programList" :value="index+1" >{{data.name}}</option>
+				</select>
+			<br/><br/>
+			服务内容：
+				<select>
+					<option value="0">请选择服务内容</option>
+					<option v-for="(data, key, index) in serviceList" :value="index+1" >{{data}}</option>
+				</select>
+			<br/><br/>
+			</div>
+			<div>服务时间：<input id="serviceTime" type="text"  class="form_datetime"/></div><br/>
+			<div>服务时长：<input id="duration" type="text"/></div><br/>
+			<div id="schoolYear">学年：<select><option>2017-2018</option></select><span></span></div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveService()">Save changes</button>
+		  </div>
+		</div>
+	  </div>
+	</div>	
+	<!--评论框-->
+	<div class="modal fade" id="Comment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">Comment</h4>
+		  </div>
+		  <div class="modal-body">
+			<input id="commentUser" type="hidden" />
+			<div style="width:90%;margin:0 auto"><textarea id="commentVal" style="width:100%;height:200px;"></textarea></div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			{if $role_id==1}<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveComment()">Save changes</button>{/if}
+		  </div>
+		</div>
+	  </div>
+	</div>	
+	<!--教师框-->
+	<div  class="modal fade" id="teacher" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">teacher</h4>
+			</div>
+			<div  class="modal-body" >
+				<div><input type="text"  v-model="searchText" placeholder="Search"/></div>
+				<div style="height:400px;overflow-y:auto;">
+					<table class="table">
+					<thead><tr>
+						<td>name</td>
+						<td>Add</td>
+					</tr>
+					</thead>
+					<tbody v-if="searchText==''">
+					<tr v-for="value in teacherList">	
+						<td><label>{{value.username}}</label>  </td>
+						<td><a href="#" v-on:click="addBox(value.userid,value.username)"><i class="zmdi zmdi-plus"></i></a></td>
+					
+					</tr>
+					</tbody>
+					<tbody v-else>
+					<tr v-for="value in searchData">	
+						<td><label>{{value.username}}</label>  </td>
+						<td><a href="#" v-on:click="addBox(value.userid,value.username)"><i class="zmdi zmdi-plus"></i></a></td>
+					</tr>
+					</tbody>
+					</table>
+					</div>
+				<input id="addText" type="hidden"  v-model="idx" placeholder="Search"/>
+				<label>SelectBox</label>
+				<div id="add-box" >
+					<table class="table">
+						<tr v-for="value in addData">
+						<td>{{value.username}}</td>
+						<td><a href="#" v-on:click="deleteBox(value.userid,value.username)"><i class="zmdi zmdi-minus"></i></a><td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary"  v-on:click="saveTeacher" data-dismiss="modal">Save changes</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+    <!-- jQuery -->
+    <script src="JS_PATH/jquery.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="JS_PATH/bootstrap.min.js"></script>
+	<!-- Vue -->
+	<script src="JS_PATH/vue.min.js"></script>
+	<!-- Init JavaScript -->
+	<script src="JS_PATH/init.js"></script>
+	<script src="JS_PATH/date.js"></script>
+	<script src="JS_PATH/bootstrap-datetimepicker.min.js"></script>
+	<script src="JS_PATH/main.js"></script>
+
+</body>
+
+</html>

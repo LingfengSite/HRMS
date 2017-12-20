@@ -52,13 +52,4 @@ class Getdata extends \think\Controller
 		return json_encode($program_project);
 	}
 	
-	public function return_program_project_flip(){
-		check_role_level(0);
-		$program_project =  include APP_PATH.'service/program_project.php';
-		foreach($program_project as $key => &$value){
-			$value['project']=array_flip($value['project']);
-		}
-		return json_encode($program_project);
-	}
-	
 }
