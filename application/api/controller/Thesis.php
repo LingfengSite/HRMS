@@ -5,11 +5,14 @@
  * @Author  Lingfeng Wei   1075548652@qq.com
  */
 namespace app\api\controller;
+
 use app\api\controller\Core\SCore;
+use app\api\controller\Core\CourseCore;
 use think\Controller;
 use think\Request;
 use think\Model;
 use think\Session;
+
 class Thesis extends Controller
 {
 	private $Core;
@@ -38,8 +41,9 @@ class Thesis extends Controller
 	*/
 	public function getThesisList()
     {
-		$param = Request::instance()->param();
-		return $this->Core->getThesisList();
+		//$param = Request::instance()->param();
+		$this->CourseCore=new CourseCore();
+		return $this->CourseCore->getThesisList();
     }
 	/*
 	function:修改课程工作量列表

@@ -4,13 +4,11 @@
  * @Created on 2017/12/22
  * @Author  Lingfeng Wei   1075548652@qq.com
  */
-namespace app\api\controller\Course;
+namespace app\api\controller\Core;
 
-use think\Controller;
-use think\Model;
 use think\Db;
 
-class SCore extends Controller {
+class SCore {
 	/*
 	function：获取单条数据
 	@tableName   表名
@@ -24,7 +22,7 @@ class SCore extends Controller {
 			if($row){
 				return json_return_with_msg(200,'Successfully delete');
 			}else{
-				return json_return_with_msg(404,'delete false');
+				return json_return_with_msg(500,'delete false');
 			}
 		}
 		catch(\Exception $e){
@@ -45,7 +43,7 @@ class SCore extends Controller {
 			if($row){
 				return json_return_with_msg(200,'Successfully add');
 			}else{
-				return json_return_with_msg(404,'add false');
+				return json_return_with_msg(500,'add false');
 			}
 		}
 		catch(\Exception $e){
@@ -66,7 +64,7 @@ class SCore extends Controller {
 			if($row){
 				return json_return_with_msg(200,'Successfully modify');
 			}else{
-				return json_return_with_msg(404,'modify false');
+				return json_return_with_msg(500,'modify false');
 			}
 		}
 		catch(\Exception $e){
@@ -86,43 +84,7 @@ class SCore extends Controller {
 			if($row){
 				return json_return_with_msg(200,'Successfully delete');
 			}else{
-				return json_return_with_msg(404,'delete false');
-			}
-		}
-		catch(\Exception $e){
-			return $e;
-		}
-	}
-	/*
-	function：获取论文工作量列表
-	createTime:2017-12-22
-	Author:Lingfeng Wei
-	*/
-	public function getThesisList(){
-		try{
-			$List = Db::table('hrms_thesis thesis,hrms_member member')->field('id,username,schoolYear,studentList,computation,updateUser,status,updatetime')->where('thesis.userid=member.userid')->select();
-			if($List){
-				return json_return_with_msg(200,"success",$List);
-			}else{
-				return json_return_with_msg(404,'get false');
-			}
-		}
-		catch(\Exception $e){
-			return $e;
-		}
-	}
-	/*
-	function：获取课程工作量列表
-	createTime:2017-12-22
-	Author:Lingfeng Wei
-	*/
-	public function getCourseList(){
-		try{
-			$List = Db::table('hrms_course course,hrms_member member')->field('id,username,courseName,project,startime,endtime,workload,score,computation,status')->where('course.userid=member.userid')->select();
-			if($List){
-				return json_return_with_msg(200,"success",$List);
-			}else{
-				return json_return_with_msg(404,'get false');
+				return json_return_with_msg(500,'delete false');
 			}
 		}
 		catch(\Exception $e){

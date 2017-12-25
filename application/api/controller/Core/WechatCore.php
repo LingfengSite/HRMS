@@ -1,16 +1,14 @@
 <?php
 /*
- * @数据操作服务
+ * @微信数据操作服务
  * @Created on 2017/12/22
  * @Author  Lingfeng Wei   1075548652@qq.com
  */
 namespace app\api\controller\Course;
 
-use think\Controller;
-use think\Model;
 use think\Db;
 
-class SCore extends Controller {
+class Wechat{
 	/*
 	function：添加操作
 	@tableName   表名
