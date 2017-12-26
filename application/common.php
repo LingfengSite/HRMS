@@ -48,7 +48,7 @@ function check_role_level($level,$return = false){
 	}
 }
 //JSON返回$code状态码,$msg状态信息
-function json_return_with_msg($code,$msg){
+function json_return_with_msg($code,$msg,$data=''){
 	if(!isset($code)){
 		$code = 0;
 		$msg = 'not set code';
@@ -56,6 +56,11 @@ function json_return_with_msg($code,$msg){
 	if(!isset($msg)){
 		$msg = "not set msg";
 	}
-	$json_respon = array('code' => $code, 'msg' => $msg);
+	if($data==''){
+		$json_respon = array('code' => $code, 'msg' => $msg);
+	}
+	else{
+		$json_respon = array('code' => $code, 'msg' => $msg,'data'=>$data);
+	}
 	return json_encode($json_respon);
 }
