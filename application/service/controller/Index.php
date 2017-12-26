@@ -30,10 +30,6 @@ class index extends \think\Controller
 		$sum = array();
 		$map = [];
 		$param = Request::instance()->param();
-		//$get_sum = Request::instance()->param('get_sum');
-		//$state = Request::instance()->param('state');
-		//$page = Request::instance()->param('page');
-		//$page_num = Request::instance()->param('page_num');
 		if(isset($param['state'])){
 			$map['state'] = (int)$param['state'];
 		}
@@ -164,6 +160,7 @@ class index extends \think\Controller
 		if(!isset($param['duration']) || !isset($param['school_term']) || !isset($param['program']) || !isset($param['project']) || !isset($param['date']) ){
 			return json_return_with_msg(404,'get param error, plz input one param at lastest');
 		}
+		$param['state'] = 2;
 		$param['update_user_id'] = $admin_id;
 		$param['update_time'] = time();
 		try{
@@ -209,7 +206,7 @@ class index extends \think\Controller
 	/*
 	functionName:意见提交
 	method         POST
-	@id      记录ID
+	@id            记录ID
 	@comment       意见内容
 	date:2017-12-13
 	Author:Louis
@@ -219,14 +216,18 @@ class index extends \think\Controller
 		check_role_level(0);
 		$param = Request::instance()->param();
 		if(isset($param['id'])){
-			if($user_id != (int)$param['id']){
+			try{
+				$table_data = Db::table('hrms_service')->field('user_id,update_user_id')->where('id',(int)$param['id'])->find();
+			}catch(\Exception $e){
+				return $e;
+			}
+			if(($user_id != $table_data['user_id']) || ($user_id != $table_data['update_user_id'])){
 				return json_return_with_msg(404,'only allow to comment own duration');
 			}
 			$where['id'] = (int)$param['id'];
 		}else{
 			return json_return_with_msg(404,'plz submit id');
 		}
-		//$comment = Request::instance()->param('comment');
 		if(isset($param['comment'])){
 			$data=[];
 		//有异议state为1，正常为0, 行政确认修改后为2
