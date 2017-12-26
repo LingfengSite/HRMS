@@ -45,16 +45,17 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(0,'select data error cause role id, plz re-login'));
 		}
-		if(isset($param['school_team']) && is_string($param['school_team'])){
+		if((isset($param['school_team'])) && (is_string($param['school_team']))){
 			$map['school_team'] = $param['school_team'];
 		}
-		if(!isset($param['page']) || !is_int($param['page'])){
+		if((!isset($param['page'])) || (!is_int($param['page']))){
 			$param['page'] = 1;
 		}
-		if(!isset($param['page_num']) || !is_int($param['page_num'])){
+		if((!isset($param['page_num'])) || (!is_int($param['page_num']))){
 			$param['page_num'] = 20;
 		}
 		try{
+		$count = Db::table('hrms_service')->count();
 		$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
@@ -80,6 +81,8 @@ class index extends \think\Controller
 		}
 		$data['code'] = 200;
 		$data['msg'] = "get list successfully";
+		$data['count'] = $count;
+		$data['all_page'] = ceil($count/$param['page_num']);
 		$data['data'] = $list;
 		}catch(\Exception $e){
 			return $e;
@@ -157,14 +160,16 @@ class index extends \think\Controller
 		}else{
 			return json_return_with_msg(404,'get ID error');
 		}
-		if(!isset($param['duration']) || !isset($param['school_term']) || !isset($param['program']) || !isset($param['project']) || !isset($param['date']) ){
+		/*
+		if((!isset($param['duration'])) || (!isset($param['school_term'])) || (!isset($param['program'])) || (!isset($param['project'])) || (!isset($param['date'])) ){
 			return json_return_with_msg(404,'get param error, plz input one param at lastest');
 		}
+		*/
 		$param['state'] = 2;
 		$param['update_user_id'] = $admin_id;
 		$param['update_time'] = time();
 		try{
-		$row = (new Service) -> allowField(true) -> save($param,$where);
+		$row = (new Service) -> allowField(true) -> where('id',$param['id'])->update($param);
 		if($row){
 			return json_return_with_msg(200,'Successfully revised');
 		}else{
