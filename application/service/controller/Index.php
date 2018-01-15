@@ -48,10 +48,16 @@ class index extends \think\Controller
 		if((isset($param['school_team'])) && (is_string($param['school_team']))){
 			$map['school_team'] = $param['school_team'];
 		}
-		if((!isset($param['page'])) || (!is_int($param['page']))){
+		if((isset($param['program'])) && (is_int($param['program']))){
+			$map['program'] = $param['program'];
+		}
+		if((isset($param['project'])) && (is_int($param['project']))){
+			$map['project'] = $param['project'];
+		}
+		if(!isset($param['page'])){
 			$param['page'] = 1;
 		}
-		if((!isset($param['page_num'])) || (!is_int($param['page_num']))){
+		if(!isset($param['page_num'])){
 			$param['page_num'] = 20;
 		}
 		try{
