@@ -7,8 +7,9 @@
 namespace app\api\controller\Core;
 
 use think\Db;
+use think\Controller;
 
-class SCore {
+class SCore extends Controller{
 	/*
 	function：获取单条数据
 	@tableName   表名
@@ -26,7 +27,8 @@ class SCore {
 			}
 		}
 		catch(\Exception $e){
-			return $e;
+			//return $e
+			return $this->redirect('/index/index/showError',500);
 		}
 	}
 	/*
@@ -47,7 +49,8 @@ class SCore {
 			}
 		}
 		catch(\Exception $e){
-			return $e;
+			//return $e
+			return $this->redirect('/index/index/showError',500);
 		}
 	}
 	/*
@@ -68,7 +71,8 @@ class SCore {
 			}
 		}
 		catch(\Exception $e){
-			return $e;
+			//return $e
+			return $this->redirect('/index/index/showError',500);
 		}
 	}
 	/*
@@ -88,7 +92,30 @@ class SCore {
 			}
 		}
 		catch(\Exception $e){
-			return $e;
+			//return $e
+			return $this->redirect('/index/index/showError',500);
+		}
+	}
+	/*
+	function：获取列表数据
+	@tableName   表名
+	@paramName   参数
+	@str         条件
+	createTime:2017-12-22
+	Author:Lingfeng Wei
+	*/
+	protected function getList($tableName,$paramName,$str){
+		try{
+			$List = Db::table($tableName)->field($paramName)->where($str)->select();
+			if($List){
+				return json_return_with_msg(200,"success",$List);
+			}else{
+				return json_return_with_msg(500,'get false');
+			}
+		}
+		catch(\Exception $e){
+			//return $e;
+			return $this->redirect('/index/index/showError',500);
 		}
 	}
 }

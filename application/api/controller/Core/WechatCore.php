@@ -7,7 +7,8 @@
 namespace app\api\controller\Core;
 
 use think\Db;
+use think\Controller;
 
 class WechatCore{
-
+	
 }
