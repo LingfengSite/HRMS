@@ -45,7 +45,7 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(404,'select data error cause role id, plz re-login'));
 		}
-		if((isset($param['hr_get_uid'])) && (is_string($param['hr_get_uid']))){
+		if((isset($param['hr_get_uid'])) && (is_int($param['hr_get_uid']))){
 			check_role_level(2);
 			$map['user_id'] = $param['hr_get_uid'];
 		}
