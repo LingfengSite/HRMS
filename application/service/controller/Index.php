@@ -43,7 +43,11 @@ class index extends \think\Controller
 			case 2:
 			break;
 			default:
-			die(json_return_with_msg(0,'select data error cause role id, plz re-login'));
+			die(json_return_with_msg(404,'select data error cause role id, plz re-login'));
+		}
+		if((isset($param['hr_get_uid'])) && (is_string($param['hr_get_uid']))){
+			check_role_level(2);
+			$map['user_id'] = $param['hr_get_uid'];
 		}
 		if((isset($param['school_team'])) && (is_string($param['school_team']))){
 			$map['school_team'] = $param['school_team'];
@@ -76,9 +80,9 @@ class index extends \think\Controller
 					$sum[$row['user_id']]['name'] = $row['name'];
 				}
 				if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
-					$sum[$row['user_id']][$row['program']][$row['project']] = $row['duration'];
+					$sum[$row['user_id']]['score'][$row['program']][$row['project']] = $row['duration'];
 				}else{
-					$sum[$row['user_id']][$row['program']][$row['project']] += $row['duration'];
+					$sum[$row['user_id']]['score'][$row['program']][$row['project']] += $row['duration'];
 				}
 			}
 			//行数据处理
@@ -94,6 +98,7 @@ class index extends \think\Controller
 			return $e;
 		}
 		if(isset($param['get_sum'])){
+			/*
 				//数据处理，数字转项目全称
 			foreach($sum as $id => &$val){
 				foreach($val as $program => &$program_val){
@@ -111,6 +116,7 @@ class index extends \think\Controller
 					}
 				}
 			}
+			*/
 			return json_encode($sum);
 		}else{
 			return json_encode($data);
