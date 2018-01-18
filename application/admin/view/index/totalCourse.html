@@ -1,0 +1,89 @@
+{include file="/header" /}
+{include file="/sidebar" /}
+        <!-- Main Content -->
+		<div class="page-wrapper">
+            <div class="container-fluid pt-25" >
+				<div class="panel panel-default card-view panel-refresh" id="course-list">
+					<div class="refresh-container">
+						<div class="la-anim-1"></div>
+					</div>
+					<div class="panel-heading">
+						<div class="pull-left">
+							工作量统计表
+						</div>
+						<div class="pull-right">
+							<a href="#" class="pull-left inline-block full-screen mr-15">
+								<i class="zmdi zmdi-fullscreen"></i>
+							</a>
+							<a href="#" class="pull-left inline-block mr-15">
+								<i class="zmdi zmdi-download"></i>
+							</a>
+							{if $role_id==2}<select>
+								<option>2017-2018学年</option>
+							</select>{/if}
+						</div>	
+						<div class="clearfix"></div> 
+					</div>	
+						<div class="panel-body row pa-0">
+						<div class="table-wrap">
+						<div class="table-responsive">
+							<table class="table table-hover mb-0">
+								<thead v-if="listSelect==0">
+									<tr>
+										<th>序号.</th>
+										{if $role_id==2}<th>授课教师</th>
+										{else}<th>学年</th>{/if}
+										<th>课程标准</th>
+										<th>等效课程</th>
+										<th>讲授课程</th>
+										<th>指导学生</th>
+										<th>MBA</th>
+										<th>EMBA</th>
+										<th>total</th>
+										<th>差别</th>
+										<th>其他调整</th>
+										<th>累计差别</th>
+										<th>备注</th>
+									</tr>
+								</thead>
+								<tbody v-if="listSelect==0">
+									<tr v-for="value in courseList">
+										<td>{{value.id}}</td>
+										{if $role_id==2}<td>{{value.username}}</td>
+										{else}<td>{{value.schoolyear}}</td>{/if}
+										<td>{{value.score}}</td>
+										<td>{{value.score}}</td>
+										<td>{{value.score}}</td>
+										<td>{{value.duration}}</td>
+										<td>{{value.score}}</td>
+										<td>{{value.score}}</td>
+										<td>{{value.status}}</td>
+										<td>{{value.workload}}</td>
+										<td>{{value.summary}}</td>
+										<td>{{value.workload}}</td>
+										<td>{{value.summary}}</td>
+									</tr>
+								</tbody>
+							</table>
+							<!--<div class="page-bar">
+									<ul>
+										<li v-if="cur>1"><a v-on:click="cur--,pageClick()">上一页</a></li>
+										<li v-if="cur==1"><a class="banclick">上一页</a></li>
+										<li v-for="index in indexs"  v-bind:class="{ 'active': cur == index}">
+											<a v-on:click="pageChange(index)">{{ index }}</a>
+										</li>
+										<li v-if="cur!=all"><a v-on:click="cur++,pageClick()">下一页</a></li>
+										<li v-if="cur == all"><a class="banclick">下一页</a></li>
+										<li><a>共<i>{{all}}</i>页</a></li>
+									</ul>
+							</div>-->
+						</div>
+					</div>	
+				</div>	
+			</div>
+		</div>
+	</div>
+	
+	
+	{include file="/footer" /}	
+	<script src="JS_PATH/course.js"></script>

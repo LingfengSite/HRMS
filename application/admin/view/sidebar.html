@@ -1,0 +1,45 @@
+		<!-- Left Sidebar Menu -->
+		<div class="fixed-sidebar-left">
+			<ul class="nav navbar-nav side-nav nicescroll-bar">
+				<li class="navigation-header">
+					<span>Main</span> 
+					<i class="zmdi zmdi-more"></i>
+				</li>
+				<li>
+					<a class="active" href="javascript:void(0);" data-toggle="collapse" data-target="#service_dr"><div class="pull-left"><i class="zmdi zmdi-landscape mr-20"></i><span class="right-nav-text">服务量</span></div><div class="pull-right"><i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+					<ul id="service_dr" class="collapse collapse-level-1 {if $target=='service'}in{/if}" aria-expanded="true">
+						<li>
+							<a href="/admin/index">服务量记录表</a>
+						</li>
+						<li>
+							<a href="/admin/TotalService">服务量统计表</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a class="active" href="javascript:void(0);" data-toggle="collapse" data-target="#course_dr"><div class="pull-left"><i class="zmdi zmdi-landscape mr-20"></i><span class="right-nav-text">工作量</span></div><div class="pull-right"><i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+					<ul id="course_dr" class="collapse collapse-level-1 {if $target=='course'}in{/if}">
+						<li>
+							<a href="/admin/course">工作量明细</a>
+						</li>
+						{if $role_id<3}<li>
+							<a href="/admin/totalCourse">工作量统计</a>
+						</li>{/if}
+						<li>
+							<a href="/admin/course">工作量标准添加</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<!-- /Left Sidebar Menu -->
+				<!-- Right Sidebar Menu -->
+		<div class="fixed-sidebar-right">
+			<ul class="right-sidebar">
+				<li>
+					
+					
+				</li>
+			</ul>
+		</div>
+	</div>

@@ -8,20 +8,23 @@ namespace app\api\controller;
 
 use app\api\controller\Core\SCore;
 use app\api\controller\Core\CourseCore;
+use app\api\controller\Core\SafeCore;
 use think\Controller;
 use think\Request;
-use think\Model;
 use think\Session;
-
+//0 老师 1 行政 2 人事
 class Thesis extends Controller
 {
 	private $Core;
+	private $CourseCore;
+	private $SafeCore;
 	public function __construct(){
+		$this->SafeCore=new SafeCore();
 		if(Session::has('user_id')){
 			$this->Core=new SCore();
 		}
 		else{
-			 $this->error('没有该页面',"/index/index/showError");
+			$this->redirect('/index/index/showError',404);
 		}
     }
 	/*
@@ -32,6 +35,10 @@ class Thesis extends Controller
     public function addNewThesis()
     {
 		$param = Request::instance()->param();
+		$param["updatetime"]=time();
+		$param["createtime"]=time();
+		$param["updateUser"]=Session::get('user_id');
+		$this->SafeCore->param_filter($param);
 		return $this->Core->addNewOne('hrms_thesis',$param);
     }
 	/*
@@ -41,9 +48,12 @@ class Thesis extends Controller
 	*/
 	public function getThesisList()
     {
-		//$param = Request::instance()->param();
+		$param=Session::get();
+	//	$this->SafeCore->param_filter($param);
+		$roleid=Session::get('role_id');
+		$userid=Session::get('user_id');
 		$this->CourseCore=new CourseCore();
-		return $this->CourseCore->getThesisList();
+		return $this->CourseCore->getThesisList($roleid,$userid);
     }
 	/*
 	function:修改课程工作量列表
@@ -55,6 +65,9 @@ class Thesis extends Controller
 	public function modifyThesis()
     {
 		$param = Request::instance()->param();
+		$param["updatetime"]=time();
+		$param["updateUser"]=Session::get('user_id');
+		$this->SafeCore->param_filter($param);
 		return $this->Core->modifyOne('hrms_thesis',$param['id'],$param['data']);
     }
 	/*
@@ -66,6 +79,7 @@ class Thesis extends Controller
 	public function removeThesis()
     {
 		$param = Request::instance()->param();
+		$this->SafeCore->param_filter($param);
 		return $this->Core->removeOne('hrms_thesis',$param['id']);
     }
 	

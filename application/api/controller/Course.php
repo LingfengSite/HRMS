@@ -5,24 +5,25 @@
  * @Author  Lingfeng Wei   1075548652@qq.com
  */
 namespace app\api\controller;
-
 use app\api\controller\Core\SCore;
 use app\api\controller\Core\CourseCore;
+use app\api\controller\Core\SafeCore;
 use think\Controller;
 use think\Request;
-use think\Model;
 use think\Session;
 
 class Course extends Controller
 {
 	private $Core;
 	private $CourseCore;
+	private $SafeCore;
 	public function __construct(){
+		$this->SafeCore=new SafeCore();
 		if(Session::has('user_id')){
 			$this->Core=new SCore();
 		}
 		else{
-			 $this->error('没有该页面',"/index/index/showError");
+			$this->redirect('/index/index/showError',404);
 		}
     }
 	/*
@@ -33,6 +34,10 @@ class Course extends Controller
     public function addNewCourse()
     {
 		$param = Request::instance()->param();
+		$param["updatetime"]=time();
+		$param["createtime"]=time();
+		$param["updateUser"]=Session::get('user_id');
+		$this->SafeCore->param_filter($param);
 		return $this->Core->addNewOne('hrms_course',$param);
     }
 	/*
@@ -42,9 +47,13 @@ class Course extends Controller
 	*/
 	public function getCourseList()
     {
-		//$param = Request::instance()->param();
+		$param=Session::get();
+		//print_r($param);
+		//$this->SafeCore->param_filter($param);
+		$roleid=Session::get('role_id');
+		$userid=Session::get('user_id');
 		$this->CourseCore=new CourseCore();
-		return $this->CourseCore->getCourseList();
+		return $this->CourseCore->getCourseList($roleid,$userid);
     }
 	/*
 	function:修改课程工作量列表
@@ -56,6 +65,9 @@ class Course extends Controller
 	public function modifyCourse()
     {
 		$param = Request::instance()->param();
+		$param["updatetime"]=time();
+		$param["updateUser"]=Session::get('user_id');
+		$this->SafeCore->param_filter($param);
 		return $this->Core->modifyOne('hrms_course',$param['id'],$param['data']);
     }
 	/*
@@ -67,6 +79,7 @@ class Course extends Controller
 	public function removeCourse()
     {
 		$param = Request::instance()->param();
+		$this->SafeCore->param_filter($param);
 		return $this->Core->removeOne('hrms_course',$param['id']);
     }
 	

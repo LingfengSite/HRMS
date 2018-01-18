@@ -1,0 +1,79 @@
+{include file="/header" /}
+{include file="/sidebar" /}
+        <!-- Main Content -->
+		<div class="page-wrapper">
+            <div class="container-fluid pt-25" >
+				<div class="panel panel-default card-view panel-refresh" id="service-list">
+					<div class="refresh-container">
+						<div class="la-anim-1"></div>
+					</div>
+					<div class="panel-heading">
+						<div class="pull-left">
+							工作量统计表
+						</div>
+						<div class="pull-right">
+							<a href="#" class="pull-left inline-block full-screen mr-15">
+								<i class="zmdi zmdi-fullscreen"></i>
+							</a>
+							<a href="#" class="pull-left inline-block mr-15">
+								<i class="zmdi zmdi-download"></i>
+							</a>
+							{if $role_id==2}<select>
+								<option>2017-2018学年</option>
+							</select>{/if}
+						</div>	
+						<div class="clearfix"></div> 
+					</div>	
+						<div class="panel-body row pa-0">
+						<div class="table-wrap">
+						<div class="table-responsive">
+							<table class="table table-hover mb-0">
+								<thead>
+									<tr>
+										<td>Name/Program</td>
+										<td colspan="9">MA-PhD Program</td>
+										<td colspan="2">MBA Program</td>
+										<td colspan="4">EMBA Program</td>
+										<td colspan="3">Admin Service</td>
+									</tr>
+								</thead>
+								<tbody >
+									<tr>
+										<td>Service</td>
+										<td bgcolor="green" v-for="value in serviceList['1'].project" >{{value}}</td>
+										<td bgcolor="red" v-for="value in serviceList['2'].project" >{{value}}</td>
+										<td bgcolor="blue" v-for="value in serviceList['3'].project" >{{value}}</td>
+										<td bgcolor="yellow" v-for="value in serviceList['4'].project" >{{value}}</td>
+									</tr>
+									<tr v-for="value in countList">
+										<td>{{value.name}}</td>	
+										<td v-for="data in value.score['1']">{{data}}</td>
+										<td v-for="data in value.score['2']">{{data}}</td>
+										<td v-for="data in value.score['3']">{{data}}</td>	
+										<td v-for="data in value.score['4']">{{data}}</td>											
+									</tr>
+								<thead>
+								
+							</table>
+							<!--<div class="page-bar">
+									<ul>
+										<li v-if="cur>1"><a v-on:click="cur--,pageClick()">上一页</a></li>
+										<li v-if="cur==1"><a class="banclick">上一页</a></li>
+										<li v-for="index in indexs"  v-bind:class="{ 'active': cur == index}">
+											<a v-on:click="pageChange(index)">{{ index }}</a>
+										</li>
+										<li v-if="cur!=all"><a v-on:click="cur++,pageClick()">下一页</a></li>
+										<li v-if="cur == all"><a class="banclick">下一页</a></li>
+										<li><a>共<i>{{all}}</i>页</a></li>
+									</ul>
+							</div>-->
+						</div>
+					</div>	
+				</div>	
+			</div>
+		</div>
+	</div>
+	
+	
+	{include file="/footer" /}	
+	<script src="JS_PATH/countService.js"></script>

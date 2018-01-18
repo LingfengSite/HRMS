@@ -13,7 +13,7 @@ class Login extends AdminAuth
         $captcha = new \think\captcha\Captcha();  
         $captcha->imageW=121;  
         $captcha->imageH = 32;  //图片高  
-        $captcha->fontSize =14;  //字体大小  
+        $captcha->fontSize =16;  //字体大小  
         $captcha->length   = 4;  //字符数  
         $captcha->fontttf = '2.ttf';  //字体  
         $captcha->expire = 30;  //有效期  
