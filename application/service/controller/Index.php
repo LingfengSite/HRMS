@@ -45,7 +45,7 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(404,'select data error cause role id, plz re-login'));
 		}
-		if((isset($param['hr_get_uid'])) && (is_int($param['hr_get_uid']))){
+		if((isset($param['hr_get_uid'])) && (is_string($param['hr_get_uid']))){
 			check_role_level(2);
 			$map['user_id'] = $param['hr_get_uid'];
 		}
@@ -65,7 +65,7 @@ class index extends \think\Controller
 			$param['page_num'] = 20;
 		}
 		try{
-		$count = Db::table('hrms_service')->count();
+		$count = Db::table('hrms_service')->where($map)->count();
 		$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
@@ -78,6 +78,7 @@ class index extends \think\Controller
 			if(isset($param['get_sum'])){
 				if(empty($sum[$row['user_id']])){
 					$sum[$row['user_id']]['name'] = $row['name'];
+					$sum[$row['user_id']]['user_id'] = $row['user_id'];
 				}
 				if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
 					$sum[$row['user_id']]['score'][$row['program']][$row['project']] = $row['duration'];
