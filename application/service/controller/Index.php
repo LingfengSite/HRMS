@@ -66,7 +66,11 @@ class index extends \think\Controller
 		}
 		try{
 		$count = Db::table('hrms_service')->where($map)->count();
-		$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
+		if(isset($param['get_sum'])){
+			$list = Db::table('hrms_service')->where($map)->select();
+		}else{
+			$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
+		}
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
 			if( (isset($row['project']) && ($row['project'] == 0)) || (isset($row['program']) && ($row['program'] == 0))){
@@ -79,6 +83,10 @@ class index extends \think\Controller
 				if(empty($sum[$row['user_id']])){
 					$sum[$row['user_id']]['name'] = $row['name'];
 					$sum[$row['user_id']]['user_id'] = $row['user_id'];
+					$service_standard = Db::table('hrms_service_standard')->field('standard')->where('user_id',$row['user_id'])->find();
+					if(isset($service_standard)){
+						$sum[$row['user_id']]['service_standard'] = $service_standard;
+					}
 				}
 				if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
 					$sum[$row['user_id']]['score'][$row['program']][$row['project']] = $row['duration'];
