@@ -26,10 +26,28 @@ class index extends \think\Controller
 	{	
 		$user_id = get_user_id();
 		$role_id = check_role_level(0,true);
-	    $program_project =  include APP_PATH.'service/program_project.php';
+		$param = Request::instance()->param();
 		$sum = array();
 		$map = [];
-		$param = Request::instance()->param();
+		//
+		if(!isset($param['school_term'])){
+			$param['school_term'] = '2016-2017';
+		}
+		$program_data = Db::table('hrms_program_project')->where('school_term',$param['school_term'])->select();
+		$return_array = array();
+		foreach($program_data as $id => $value){
+			if($value['item_parent_id'] == 0){
+				$return_array[$value['id']]['name'] = $value['item_name']; 
+			}
+		}
+		foreach($program_data as $id => $value){
+			if($value['item_parent_id'] != 0){
+				$return_array[$value['item_parent_id']]['project'][$value['id']] = $value['item_name'];
+			}
+		}
+	    //$program_project =  include APP_PATH.'service/program_project.php';
+		$program_project = $return_array;
+		//
 		if(isset($param['state'])){
 			$map['state'] = (int)$param['state'];
 		}
@@ -80,15 +98,17 @@ class index extends \think\Controller
 			$row['update_user_name'] = $user_list[$row['update_user_id']];
 			//个人时长统计
 			if(isset($param['get_sum'])){
-				if(empty($sum[$row['user_id']])){
+				if(!isset($sum[$row['user_id']])){
 					$sum[$row['user_id']]['name'] = $row['name'];
 					$sum[$row['user_id']]['user_id'] = $row['user_id'];
 					$service_standard = Db::table('hrms_service_standard')->field('standard')->where('user_id',$row['user_id'])->find();
 					if(isset($service_standard)){
 						$sum[$row['user_id']]['service_standard'] = $service_standard;
+					}else{
+						$sum[$row['user_id']]['service_standard'] = 10;
 					}
 				}
-				if(empty($sum[$row['user_id']][$row['program']][$row['project']])){
+				if(!isset($sum[$row['user_id']]['score'][$row['program']][$row['project']])){
 					$sum[$row['user_id']]['score'][$row['program']][$row['project']] = $row['duration'];
 				}else{
 					$sum[$row['user_id']]['score'][$row['program']][$row['project']] += $row['duration'];

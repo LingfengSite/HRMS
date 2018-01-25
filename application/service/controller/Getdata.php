@@ -1,6 +1,7 @@
 <?php
 namespace app\service\controller;
 use think\Db;
+use think\Request;
 class Getdata extends \think\Controller
 {	
 	private $users;
@@ -51,5 +52,35 @@ class Getdata extends \think\Controller
 		$program_project =  include APP_PATH.'service/program_project.php';
 		return json_encode($program_project);
 	}
+	
+	public function return_program_project_flip(){
+		check_role_level(0);
+		$program_project =  include APP_PATH.'service/program_project.php';
+		foreach($program_project as $key => &$value){
+			$value['project']=array_flip($value['project']);
+		}
+		return json_encode($program_project);
+	}
+	
+	public function get_program_project(){
+		if(!isset($param['school_term'])){
+			$param['school_term'] = '2016-2017';
+		}
+		$program_data = Db::table('hrms_program_project')->where('school_term',$param['school_term'])->select();
+		$return_array = array();
+		foreach($program_data as $id => $value){
+			if($value['item_parent_id'] == 0){
+				$return_array[$value['id']]['name'] = $value['item_name']; 
+			}
+		}
+		foreach($program_data as $id => $value){
+			if($value['item_parent_id'] != 0){
+				$return_array[$value['item_parent_id']]['project'][$value['id']] = $value['item_name'];
+			}
+		}
+	    return json_encode($return_array);
+	}
+	
+	
 	
 }
