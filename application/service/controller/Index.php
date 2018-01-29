@@ -29,10 +29,19 @@ class index extends \think\Controller
 		$param = Request::instance()->param();
 		$sum = array();
 		$map = [];
-		//
 		if(!isset($param['school_term'])){
 			$param['school_term'] = '2016-2017';
 		}
+		//取出需要统计的项目，稍后预置0
+		$project_map['school_term'] = $param['school_term'];
+		$project_map['item_parent_id'] = ['<>',0];
+		$project_all = Db::table('hrms_program_project')->where($project_map)->select();
+		/*
+		$project_array = array();
+		foreach($project_all as $num => $val){
+			array_push($project_array,$val['id']);
+		}*/
+
 		$program_data = Db::table('hrms_program_project')->where('school_term',$param['school_term'])->select();
 		$return_array = array();
 		foreach($program_data as $id => $value){
@@ -91,27 +100,35 @@ class index extends \think\Controller
 		}
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
+			/*
 			if( (isset($row['project']) && ($row['project'] == 0)) || (isset($row['program']) && ($row['program'] == 0))){
 				continue;
-			}
+			}*/
 			$row['name'] = $user_list[$row['user_id']];
 			$row['update_user_name'] = $user_list[$row['update_user_id']];
 			//个人时长统计
-			if(isset($param['get_sum'])){
+			if(isset($param['get_sum'])){		
 				if(!isset($sum[$row['user_id']])){
 					$sum[$row['user_id']]['name'] = $row['name'];
 					$sum[$row['user_id']]['user_id'] = $row['user_id'];
 					$service_standard = Db::table('hrms_service_standard')->field('standard')->where('user_id',$row['user_id'])->find();
 					if(isset($service_standard)){
-						$sum[$row['user_id']]['service_standard'] = $service_standard;
+						$sum[$row['user_id']]['service_standard'] = $service_standard['standard'];
 					}else{
 						$sum[$row['user_id']]['service_standard'] = 10;
 					}
+						
+					//各项目预置0
+					foreach($project_all as $id => $val){
+						$sum[$row['user_id']]['score'][$val['id']] = array('project_id'=>$val['id'],'program_id'=>$val['item_parent_id'],'duration'=>'0');
+					}
+					//
+	
 				}
-				if(!isset($sum[$row['user_id']]['score'][$row['program']][$row['project']])){
-					$sum[$row['user_id']]['score'][$row['program']][$row['project']] = $row['duration'];
+				if(!isset($sum[$row['user_id']]['score'][$row['project']])){
+					$sum[$row['user_id']]['score'][$row['project']] = array('project_id'=>$row['project'],'program_id'=>$row['program'],'duration'=>$row['duration']);
 				}else{
-					$sum[$row['user_id']]['score'][$row['program']][$row['project']] += $row['duration'];
+					$sum[$row['user_id']]['score'][$row['project']]['duration'] += $row['duration'];
 				}
 			}
 			//行数据处理
@@ -146,7 +163,10 @@ class index extends \think\Controller
 				}
 			}
 			*/
-			return json_encode($sum);
+			foreach($sum as $id => &$val ){
+				$val['score'] = array_values($val['score']);
+			}
+			return json_encode(array_values($sum));
 		}else{
 			return json_encode($data);
 		}
