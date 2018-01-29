@@ -8,6 +8,7 @@ class Getdata extends \think\Controller
 
 	public function __construct(){ 
         $this->users = Db::table('hrms_member')->field('userid,username')->select();
+		$this->get_param = Request::instance()->param();
     } 
 
 	/*
@@ -63,10 +64,10 @@ class Getdata extends \think\Controller
 	}
 	
 	public function get_program_project(){
-		if(!isset($param['school_term'])){
-			$param['school_term'] = '2016-2017';
+		if(!isset($this->get_param['school_term'])){
+			$this->get_param['school_term'] = '2017-2018';
 		}
-		$program_data = Db::table('hrms_program_project')->where('school_term',$param['school_term'])->select();
+		$program_data = Db::table('hrms_program_project')->where('school_term',$this->get_param['school_term'])->select();
 		$return_array = array();
 		foreach($program_data as $id => $value){
 			if($value['item_parent_id'] == 0){
@@ -81,6 +82,23 @@ class Getdata extends \think\Controller
 	    return json_encode($return_array);
 	}
 	
-	
+	public function get_program_project_array(){
+		if(!isset($this->get_param['school_term'])){
+			$this->get_param['school_term'] = '2017-2018';
+		}
+		$program_data = Db::table('hrms_program_project')->where('school_term',$this->get_param['school_term'])->select();
+		$return_array = array();
+		foreach($program_data as $id => $value){
+			if($value['item_parent_id'] == 0){
+				$return_array[$value['id']]['name'] = $value['item_name']; 
+			}
+		}
+		foreach($program_data as $id => $value){
+			if($value['item_parent_id'] != 0){
+				$return_array[$value['item_parent_id']]['project'][$value['id']] = $value['item_name'];
+			}
+		}
+	    var_dump($return_array);
+	}
 	
 }
