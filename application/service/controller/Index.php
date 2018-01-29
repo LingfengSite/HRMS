@@ -28,9 +28,9 @@ class index extends \think\Controller
 		$role_id = check_role_level(0,true);
 		$param = Request::instance()->param();
 		$sum = array();
-		$map = [];
+		$map = array();
 		if(!isset($param['school_term'])){
-			$param['school_term'] = '2016-2017';
+			$param['school_term'] = "2016-2017";
 		}
 		//取出需要统计的项目，稍后预置0
 		$project_map['school_term'] = $param['school_term'];
@@ -76,13 +76,13 @@ class index extends \think\Controller
 			check_role_level(2);
 			$map['user_id'] = $param['hr_get_uid'];
 		}
-		if((isset($param['school_team'])) && (is_string($param['school_team']))){
-			$map['school_team'] = $param['school_team'];
+		if((isset($param['school_term'])) && (is_string($param['school_term']))){
+			$map['school_term'] = $param['school_term'];
 		}
-		if((isset($param['program'])) && (is_int($param['program']))){
+		if((isset($param['program'])) && (is_string($param['program'])) && ($param['program'] != 0)){
 			$map['program'] = $param['program'];
 		}
-		if((isset($param['project'])) && (is_int($param['project']))){
+		if((isset($param['project'])) && (is_string($param['project']))){
 			$map['project'] = $param['project'];
 		}
 		if(!isset($param['page'])){
@@ -100,10 +100,9 @@ class index extends \think\Controller
 		}
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
-			/*
 			if( (isset($row['project']) && ($row['project'] == 0)) || (isset($row['program']) && ($row['program'] == 0))){
 				continue;
-			}*/
+			}
 			$row['name'] = $user_list[$row['user_id']];
 			$row['update_user_name'] = $user_list[$row['update_user_id']];
 			//个人时长统计
