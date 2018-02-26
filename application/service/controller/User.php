@@ -4,6 +4,7 @@ use think\Db;
 use think\Request;
 use think\Session;
 use think\captcha;
+use app\api\controller\TokenCore;
 
 class User extends \think\Controller
 {
@@ -68,6 +69,8 @@ class User extends \think\Controller
 		Session::set('user_id',$user_info['userid']);
 		Session::set('role_id',$user_info['roleid']);
 		Session::set('username',$param['username']);
+	//	$token=new TokenCore();
+		//$token->autoCreateToken($user_info['userid']);
 		return json_return_with_msg(200,'login successfully');	
 	}
 }

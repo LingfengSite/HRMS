@@ -30,7 +30,7 @@ class index extends \think\Controller
 		$sum = array();
 		$map = array();
 		if(!isset($param['school_term'])){
-			$param['school_term'] = "2016-2017";
+			$param['school_term'] = "2017-2018";
 		}
 		//取出需要统计的项目，稍后预置0
 		$project_map['school_term'] = $param['school_term'];

@@ -7,7 +7,7 @@ class Getdata extends \think\Controller
 	private $users;
 
 	public function __construct(){ 
-        $this->users = Db::table('hrms_member')->field('userid,username')->select();
+        $this->users = Db::table('hrms_member')->field('userid,username,roleid')->order("username")->select();
 		$this->get_param = Request::instance()->param();
     } 
 
@@ -48,31 +48,16 @@ class Getdata extends \think\Controller
 		
 	}
 	
-	public function return_program_project(){
-		check_role_level(0);
-		$program_project =  include APP_PATH.'service/program_project.php';
-		return json_encode($program_project);
-	}
-	
-	public function return_program_project_flip(){
-		check_role_level(0);
-		$program_project =  include APP_PATH.'service/program_project.php';
-		foreach($program_project as $key => &$value){
-			$value['project']=array_flip($value['project']);
-		}
-		return json_encode($program_project);
-	}
-	
+
 	public function get_program_project(){
 		if(!isset($this->get_param['school_term'])){
 			$this->get_param['school_term'] = '2017-2018';
 		}
 		$program_data = Db::table('hrms_program_project')->where('school_term',$this->get_param['school_term'])->select();
 		$return_array = array();
-		foreach($program_data as $id => $value){
-			if($value['item_parent_id'] == 0){
+		$parent_data = Db::table('hrms_program_project')->where('item_parent_id',0)->select();
+		foreach($parent_data as $id => $value){		
 				$return_array[$value['id']]['name'] = $value['item_name']; 
-			}
 		}
 		foreach($program_data as $id => $value){
 			if($value['item_parent_id'] != 0){
@@ -82,23 +67,5 @@ class Getdata extends \think\Controller
 	    return json_encode($return_array);
 	}
 	
-	public function get_program_project_array(){
-		if(!isset($this->get_param['school_term'])){
-			$this->get_param['school_term'] = '2017-2018';
-		}
-		$program_data = Db::table('hrms_program_project')->where('school_term',$this->get_param['school_term'])->select();
-		$return_array = array();
-		foreach($program_data as $id => $value){
-			if($value['item_parent_id'] == 0){
-				$return_array[$value['id']]['name'] = $value['item_name']; 
-			}
-		}
-		foreach($program_data as $id => $value){
-			if($value['item_parent_id'] != 0){
-				$return_array[$value['item_parent_id']]['project'][$value['id']] = $value['item_name'];
-			}
-		}
-	    var_dump($return_array);
-	}
 	
 }
