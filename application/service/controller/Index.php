@@ -29,8 +29,8 @@ class index extends \think\Controller
 		$param = Request::instance()->param();
 		$sum = array();
 		$map = array();
-		if(!isset($param['school_term'])){
-			$param['school_term'] = "2017-2018";
+		if(!isset($param['school_term']) || ($param['school_term'] == 0)){
+			$param['school_term'] = "".(date('Y')-1)."-".date('Y')."";
 		}
 		//取出需要统计的项目，稍后预置0
 		$project_map['school_term'] = $param['school_term'];
