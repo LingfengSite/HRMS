@@ -188,6 +188,12 @@ class index extends \think\Controller
 		$data = Request::instance()->param();
 		$data['update_user_id'] = $admin_id;
 		$data['update_time'] = time();
+		if((!ISSET($data['program'])) || ($data['program'] == 0)){
+			return json_return_with_msg(404,'add program false');
+		}
+		if((!ISSET($data['project'])) || ($data['project'] == 0)){
+			return json_return_with_msg(404,'add project false');
+		}
 		try{
 		$row = (new Service) -> allowField(true) -> save($data);
 		if($row){
@@ -219,6 +225,12 @@ class index extends \think\Controller
 			$where = ['id' => (int)$param['id']];
 		}else{
 			return json_return_with_msg(404,'get ID error');
+		}
+		if((!ISSET($param['program'])) || ($param['program'] == 0)){
+			return json_return_with_msg(404,'get program false');
+		}
+		if((!ISSET($param['project'])) || ($param['project'] == 0)){
+			return json_return_with_msg(404,'get project false');
 		}
 		/*
 		if((!isset($param['duration'])) || (!isset($param['school_term'])) || (!isset($param['program'])) || (!isset($param['project'])) || (!isset($param['date'])) ){
