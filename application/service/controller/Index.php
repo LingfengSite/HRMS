@@ -65,7 +65,22 @@ class index extends \think\Controller
 			$map['user_id'] = $user_id;
 			break;
 			case 1:
+			/*原始
 			$map['update_user_id'] = $user_id;
+			*/
+				switch ($user_id){
+					case 70:
+					$map['program'] = 3;
+					break;
+					case 71:
+					$map['program'] = 2;
+					break;
+					case 72:
+					$map['program'] = 1;
+					break;
+					default:
+					die(json_return_with_msg(404,'select data error cause user id, plz re-login'));
+				}
 			break;
 			case 2:
 			break;
