@@ -179,6 +179,7 @@ class index extends \think\Controller
 			*/
 			foreach($sum as $id => &$val ){
 				$val['score'] = array_values($val['score']);
+				array_multisort(array_column($val['score'],'program_id'),SORT_ASC,$val['score']);
 			}
 			return json_encode(array_values($sum));
 		}else{
