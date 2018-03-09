@@ -57,7 +57,7 @@ class index extends \think\Controller
 	    //$program_project =  include APP_PATH.'service/program_project.php';
 		$program_project = $return_array;
 		//
-		if(isset($param['state'])){
+		if(isset($param['state']) && ($param['state'] != -1)){
 			$map['state'] = (int)$param['state'];
 		}
 		switch ($role_id){
