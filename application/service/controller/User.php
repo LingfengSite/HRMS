@@ -61,6 +61,10 @@ class User extends \think\Controller
 		if($user_info['password'] != md5(md5($param['password']).$user_info['encrypt'])){
 			return json_return_with_msg(401,'password error');
 		}
+		$lastloginip = Db::table('hrms_member')->where('username',$param['username'])->value('lastloginip');
+		if(empty($lastloginip)){ 
+			$lastloginip = 0; 
+		}
 		//$user_IP = ($_SERVER["HTTP_VIA"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
 		$user_IP = $_SERVER["REMOTE_ADDR"];
 		$update_data['lastloginip'] = $user_IP;
@@ -71,7 +75,9 @@ class User extends \think\Controller
 		Session::set('username',$param['username']);
 	//	$token=new TokenCore();
 		//$token->autoCreateToken($user_info['userid']);
-		return json_return_with_msg(200,'login successfully');	
+		$success_return_array = array('code' => '200', 'msg' => 'login successfully', 'lastloginip' => $lastloginip);
+		return json_encode($success_return_array);
+		//return json_return_with_msg(200,'login successfully');	
 	}
 	
 	/*
