@@ -73,4 +73,41 @@ class User extends \think\Controller
 		//$token->autoCreateToken($user_info['userid']);
 		return json_return_with_msg(200,'login successfully');	
 	}
+	
+	/*
+		functionName:修改密码
+		method      GET/POST
+		@user_id    用户ID
+		@password   新密码
+		date:2018-03-09
+		Author:Louis
+	*/
+	
+	public function password_reset(){
+		$param = Request::instance()->param();
+		if((!empty($param['user_id'])) && (!empty($param['password'])) ){
+			$user_id = get_user_id();
+			if($param['user_id'] != $user_id){ return json_return_with_msg(404,'user id error'); }
+			$encrypt = $this->make_encrypt();
+			$new_password = md5(md5($param['password']).$encrypt);
+			try{
+				$row = Db::table('hrms_member')->where('id', $param['user_id'])->setField('password', $new_password);
+			}catch(\Exception $e){
+				return $e;
+			}
+		}else{
+			return json_return_with_msg(404,'param error');
+		}
+	}
+	
+	public function make_encrypt($length = 6) {
+		$chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+		$keys = array_rand($chars, $length); 
+		$encrypt = '';
+		for($i = 0; $i < $length; $i++) {
+			$password .= $chars[$keys[$i]];
+		}
+		return $encrypt;
+	}
+	
 }
