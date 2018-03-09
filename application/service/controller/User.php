@@ -96,7 +96,9 @@ class User extends \think\Controller
 			$encrypt = $this->make_encrypt();
 			$new_password = md5(md5($param['password']).$encrypt);
 			try{
-				$row = Db::table('hrms_member')->where('userid', $user_id)->setField('password', $new_password);
+				$update_data['password'] = $new_password;
+				$update_data['encrypt'] = $encrypt;
+				$row = Db::table('hrms_member')->where('userid', $user_id)->update($update_data);
 				return json_return_with_msg(200,'ok');
 			}catch(\Exception $e){
 				return $e;
