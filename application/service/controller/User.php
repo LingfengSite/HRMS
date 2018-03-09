@@ -91,13 +91,13 @@ class User extends \think\Controller
 	
 	public function password_reset(){
 		$param = Request::instance()->param();
-		if((!empty($param['user_id'])) && (!empty($param['password'])) ){
+		if(!empty($param['password'])){
 			$user_id = get_user_id();
-			if($param['user_id'] != $user_id){ return json_return_with_msg(404,'user id error'); }
 			$encrypt = $this->make_encrypt();
 			$new_password = md5(md5($param['password']).$encrypt);
 			try{
-				$row = Db::table('hrms_member')->where('id', $param['user_id'])->setField('password', $new_password);
+				$row = Db::table('hrms_member')->where('userid', $user_id)->setField('password', $new_password);
+				return json_return_with_msg(200,'ok');
 			}catch(\Exception $e){
 				return $e;
 			}
@@ -111,7 +111,7 @@ class User extends \think\Controller
 		$keys = array_rand($chars, $length); 
 		$encrypt = '';
 		for($i = 0; $i < $length; $i++) {
-			$password .= $chars[$keys[$i]];
+			$encrypt .= $chars[$keys[$i]];
 		}
 		return $encrypt;
 	}
