@@ -111,7 +111,7 @@ class index extends \think\Controller
 		if(isset($param['get_sum'])){
 			$list = Db::table('hrms_service')->where($map)->select();
 		}else{
-			$list = Db::table('hrms_service')->where($map)->page($param['page'],$param['page_num'])->select();
+			$list = Db::table('hrms_service')->where($map)->order('field(state,1,2,0)')->page($param['page'],$param['page_num'])->select();
 		}
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
