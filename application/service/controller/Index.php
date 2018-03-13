@@ -87,8 +87,8 @@ class index extends \think\Controller
 			default:
 			die(json_return_with_msg(404,'select data error cause role id, plz re-login'));
 		}
-		if((isset($param['hr_get_uid'])) && (is_string($param['hr_get_uid'])) && ($role_id == 2)){
-			check_role_level(2);
+		if((isset($param['hr_get_uid'])) && (is_string($param['hr_get_uid'])) && ($role_id >= 1)){
+			check_role_level(1);
 			$map['user_id'] = $param['hr_get_uid'];
 		}
 		if((isset($param['school_term'])) && (is_string($param['school_term']))){
@@ -105,6 +105,26 @@ class index extends \think\Controller
 		}
 		if(!isset($param['page_num'])){
 			$param['page_num'] = 20;
+		}
+		if(isset($param['search'])){
+			try{
+				$search_uid = Db::table('hrms_member')->where('username','like',$param['search'])->value('userid');
+			}catch(\Exception $e){
+				return $e;
+			}
+			switch ($role_id){
+			case 0:
+			$map['update_user_id'] = $search_uid;
+			break;
+			case 1:
+			$map['user_id'] = $search_uid;
+			break;
+			case 2:
+			$map['user_id|update_user_id'] = $search_uid;
+			break;
+			default:
+			die(json_return_with_msg(404,'select data error cause role id, plz re-login'));
+			}
 		}
 		try{
 		$count = Db::table('hrms_service')->where($map)->count();
@@ -181,6 +201,7 @@ class index extends \think\Controller
 				$val['score'] = array_values($val['score']);
 				array_multisort(array_column($val['score'],'program_id'),SORT_ASC,$val['score']);
 			}
+			array_multisort(array_column($sum,'name'),SORT_ASC,$sum);
 			return json_encode(array_values($sum));
 		}else{
 			return json_encode($data);
