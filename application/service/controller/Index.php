@@ -106,6 +106,10 @@ class index extends \think\Controller
 		if(!isset($param['page_num'])){
 			$param['page_num'] = 20;
 		}
+		$order_string = 'field(state,1,2,0)';
+		if(isset($param['order_by_date'])){
+			$order_string .= ',date';
+		}
 		if(isset($param['search'])){
 			try{
 				$search_uid = Db::table('hrms_member')->where('username','like',$param['search'])->value('userid');
@@ -131,7 +135,7 @@ class index extends \think\Controller
 		if(isset($param['get_sum'])){
 			$list = Db::table('hrms_service')->where($map)->select();
 		}else{
-			$list = Db::table('hrms_service')->where($map)->order('field(state,1,2,0)')->page($param['page'],$param['page_num'])->select();
+			$list = Db::table('hrms_service')->where($map)->order($order_string)->page($param['page'],$param['page_num'])->select();
 		}
 		$user_list = Db::table('hrms_member')->column('username','userid');
 		foreach($list as &$row){
@@ -237,6 +241,55 @@ class index extends \think\Controller
 			return json_return_with_msg(200,'Successfully added');
 		}else{
 			return json_return_with_msg(404,'add false');
+		}
+		}catch(\Exception $e){
+			return $e;
+		}
+	}
+	
+	/*
+		functionName:删除服务量数据
+		method        POST/GET
+		@id           数据id
+		date:2018-3-13
+		Author:Louis
+	*/
+	public function del(){
+		$role_id = check_role_level(1,true);
+		$user_id = get_user_id();
+		$id = Request::instance()->param('id');
+		switch ($role_id){
+		case 1:
+			try{
+				$program_id = Db::table('hrms_service')->where('id',$id)->value('program');
+			}catch(\Exception $e){
+				return $e;
+			}
+			switch ($program_id){
+				case 1:
+					if($user_id != 72){die(json_return_with_msg(404,'Only MA account can delete MA data'));}
+				break;
+				case 2:
+					if($user_id != 71){die(json_return_with_msg(404,'Only MBA account can delete MBA data'));}
+				break;
+				case 3:
+					if($user_id != 70){die(json_return_with_msg(404,'Only EMBA account can delete EMBA data'));}
+				break;
+				default:
+				die(json_return_with_msg(404,'select program error(Admin Service should be revised by HR) , plz contact system administrator'));
+			}	
+		break;
+		case 2:
+		break;
+		default:
+		die(json_return_with_msg(404,'error cause role id, plz re-login'));
+		}
+		try{
+			$row = Db::table('hrms_service')->where('id',$id)->delete();
+			if($row){
+			return json_return_with_msg(200,'Successfully deleted');
+		}else{
+			return json_return_with_msg(404,'Delete false');
 		}
 		}catch(\Exception $e){
 			return $e;
