@@ -112,7 +112,8 @@ class index extends \think\Controller
 		}
 		if(isset($param['search'])){
 			try{
-				$search_uid = Db::table('hrms_member')->where('username','like',$param['search'])->value('userid');
+				$search_map = array('username' => array('like', '%'.$param['search'].'%'));
+				$search_uid = Db::table('hrms_member')->where($search_map)->value('userid');
 			}catch(\Exception $e){
 				return $e;
 			}
