@@ -110,7 +110,7 @@ class index extends \think\Controller
 		if(isset($param['order_by_date'])){
 			$order_string .= ',date';
 		}
-		if(isset($param['search'])){
+		if(!empty($param['search'])){
 			try{
 				$search_map = array('username' => array('like', '%'.$param['search'].'%'));
 				$search_uid = Db::table('hrms_member')->where($search_map)->value('userid');
