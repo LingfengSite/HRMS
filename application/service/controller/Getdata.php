@@ -50,8 +50,8 @@ class Getdata extends \think\Controller
 	
 
 	public function get_program_project(){
-		if(!isset($this->get_param['school_term'])){
-			$this->get_param['school_term'] = '2017-2018';
+		if((!isset($this->get_param['school_term'])) || ($this->get_param['school_term'] == 0) ){
+			$this->get_param['school_term'] = "".(date('Y')-1)."-".date('Y')."";
 		}
 		$program_data = Db::table('hrms_program_project')->where('school_term',$this->get_param['school_term'])->select();
 		$return_array = array();
