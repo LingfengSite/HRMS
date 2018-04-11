@@ -10,12 +10,21 @@
 // +----------------------------------------------------------------------
 // 应用公共文件
 use think\Db;
-use \think\Session;
+use think\Session;
+use think\Request;
 //add by louis 2017.12.12
 //获取用户ID
 function get_user_id(){
 	if($user_id = Session::get('user_id')){
 		return $user_id;
+	}else{
+		die(json_return_with_msg(0,'Plz login in'));
+	}
+}
+//获取用户名
+function get_user_name(){
+	if($user_name = Session::get('user_name')){
+		return $user_name;
 	}else{
 		die(json_return_with_msg(0,'Plz login in'));
 	}
@@ -63,4 +72,25 @@ function json_return_with_msg($code,$msg,$data=''){
 		$json_respon = array('code' => $code, 'msg' => $msg,'data'=>$data);
 	}
 	return json_encode($json_respon);
+}
+//非空检查
+function check_param_empty($array=array(),$not_zero=false){
+	if(is_array($array) && empty($array)){
+		json_return_with_msg('404','check empty error');
+	}else if(is_array($array)){
+		$param = Request::instance()->param();
+		foreach($array as $key=>$item){
+			if($not_zero){
+				if((!isset($param[$item])) || (empty($param[$item])) || ($param[$item] == 0)){
+					die(json_return_with_msg('404','check empty error, empty param '.$item.'.'));
+				}
+			}else{
+				if((!isset($param[$item])) || (empty($param[$item]))){
+					die(json_return_with_msg('404','check empty error, empty param '.$item.'.'));
+				}
+			}
+		}
+	}else{
+		json_return_with_msg('404','check empty error, should be an array');
+	}
 }
